@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">Helpdeskai</string>
+    <string name="app_name">HelpDesk AI</string>
+    <string name="app_tagline">Smart Campus &amp; Grievance Management</string>
+    
+    <!-- Role Selection -->
+    <string name="select_role_title">Welcome to HelpDesk AI</string>
+    <string name="select_role_subtitle">Choose your login portal to proceed</string>
+    <string name="role_student">Student / Citizen</string>
+    <string name="role_student_desc">Raise issues with Photo &amp; GPS, track status, and get AI answers.</string>
+    <string name="role_admin">Officer / Admin</string>
+    <string name="role_admin_desc">Review, assign, update complaint status, and reply to students.</string>
 </resources>

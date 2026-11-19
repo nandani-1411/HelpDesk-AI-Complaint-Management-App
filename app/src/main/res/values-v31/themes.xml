@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Android 12+ Splash Screen Theme -->
+    <style name="Base.Theme.Helpdeskai" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorSecondary">@color/accent</item>
+        <item name="android:statusBarColor">@color/primary</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <item name="android:windowBackground">@color/bg_light</item>
+        <!-- Android 12+ System Splash Screen: show our logo on blue background -->
+        <item name="android:windowSplashScreenBackground">#1A56DB</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_helpdesk_logo</item>
+        <item name="android:windowSplashScreenAnimationDuration">800</item>
+    </style>
+
+    <style name="Theme.Helpdeskai" parent="Base.Theme.Helpdeskai" />
+</resources>

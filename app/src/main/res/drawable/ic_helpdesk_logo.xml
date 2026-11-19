@@ -1,0 +1,18 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="96dp"
+    android:height="96dp"
+    android:viewportWidth="96"
+    android:viewportHeight="96">
+    <!-- Circular Background Base -->
+    <path
+        android:fillColor="#1A56DB"
+        android:pathData="M48,8C25.9,8 8,25.9 8,48s17.9,40 40,40 40,-17.9 40,-40S70.1,8 48,8z" />
+    <!-- Support Headset & Sparkle Icon -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M48,24c-13.3,0 -24,10.7 -24,24v14c0,3.3 2.7,6 6,6h4c1.1,0 2,-0.9 2,-2V52c0,-1.1 -0.9,-2 -2,-2h-6v-2c0,-11 9,-20 20,-20s20,9 20,20v2h-6c-1.1,0 -2,0.9 -2,2v14c0,1.1 0.9,2 2,2h4c3.3,0 6,-2.7 6,-6V48c0,-13.3 -10.7,-24 -24,-24z" />
+    <!-- AI Sparkle in Center -->
+    <path
+        android:fillColor="#0D9488"
+        android:pathData="M48,36l2.5,5.5L56,44l-5.5,2.5L48,52l-2.5,-5.5L40,44l5.5,-2.5z" />
+</vector>
