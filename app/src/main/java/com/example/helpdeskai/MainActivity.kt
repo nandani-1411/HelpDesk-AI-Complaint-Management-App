@@ -1,18 +1,16 @@
 package com.example.helpdeskai
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.view.animation.AnimationUtils
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.helpdeskai.data.db.ComplaintDatabaseHelper
-import com.example.helpdeskai.data.model.Complaint
-import com.example.helpdeskai.utils.LocationHelper
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,12 +27,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
         applyEdgeToEdgeInsets(findViewById(R.id.splash_root))
 
-        val logo = findViewById<View>(R.id.iv_logo)
         val branding = findViewById<View>(R.id.layout_branding)
         
         // Start Fade-in Animation on logo & title
         val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
-        branding.startAnimation(fadeIn)
+        branding?.startAnimation(fadeIn)
 
         // 3. Transition to Role Selection after 1.8 seconds
         Handler(Looper.getMainLooper()).postDelayed({
@@ -48,17 +45,16 @@ class MainActivity : AppCompatActivity() {
 
         val root = findViewById<View>(R.id.role_select_root)
         val slideUp = AnimationUtils.loadAnimation(this, R.anim.slide_up)
-        root.startAnimation(slideUp)
+        root?.startAnimation(slideUp)
 
-        // Student Card Click Listener
+        // Student Card Click Listener -> opens Complaint List / My Complaints
         findViewById<View>(R.id.card_student_role)?.setOnClickListener {
-            Toast.makeText(this, "Opening Student Complaint Portal...", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, ComplaintListActivity::class.java))
         }
 
-        // Admin Card Click Listener
+        // Admin Card Click Listener -> opens Admin Dashboard
         findViewById<View>(R.id.card_admin_role)?.setOnClickListener {
-            val count = dbHelper.getAllComplaints().size
-            Toast.makeText(this, "Opening Officer Portal ($count complaints in DB)", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, AdminDashboardActivity::class.java))
         }
     }
 
