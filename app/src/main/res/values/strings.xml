@@ -9,4 +9,41 @@
     <string name="role_student_desc">Raise issues with Photo &amp; GPS, track status, and get AI answers.</string>
     <string name="role_admin">Officer / Admin</string>
     <string name="role_admin_desc">Review, assign, update complaint status, and reply to students.</string>
+
+    <!-- Complaint Form -->
+    <string name="title_file_complaint">File a Complaint</string>
+    <string name="hint_title">Complaint Title (e.g. Broken fan in Lab 3)</string>
+    <string name="hint_description">Describe the issue clearly...</string>
+    <string name="label_category">Category</string>
+    <string name="label_attach_photo">Photo Proof (Optional)</string>
+    <string name="btn_take_photo">Capture Photo</string>
+    <string name="label_gps_location">Location Details</string>
+    <string name="btn_fetch_gps">Fetch Current GPS</string>
+    <string name="btn_submit_complaint">Submit Complaint</string>
+    <string name="ai_suggesting">AI Analyzing grievance...</string>
+
+    <!-- Complaint List -->
+    <string name="title_my_complaints">My Complaints</string>
+    <string name="btn_new_complaint">Raise New Complaint</string>
+    <string name="empty_complaints_title">No Complaints Yet</string>
+    <string name="empty_complaints_desc">You haven\'t submitted any complaints yet. Tap the button below to raise your first grievance.</string>
+
+    <!-- Admin Dashboard -->
+    <string name="title_admin_portal">Admin Complaint Desk</string>
+    <string name="filter_all">All</string>
+    <string name="filter_pending">Pending</string>
+    <string name="filter_in_progress">In Progress</string>
+    <string name="filter_resolved">Resolved</string>
+
+    <!-- Categories Array -->
+    <string-array name="complaint_categories">
+        <item>Select Category</item>
+        <item>Hostel &amp; Mess</item>
+        <item>Scholarship &amp; Fees</item>
+        <item>Academics &amp; Exams</item>
+        <item>Campus Infrastructure</item>
+        <item>Placement &amp; Training</item>
+        <item>Administration</item>
+        <item>Other</item>
+    </string-array>
 </resources>
