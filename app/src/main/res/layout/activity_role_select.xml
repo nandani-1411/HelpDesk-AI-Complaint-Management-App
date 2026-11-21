@@ -4,15 +4,15 @@
     android:id="@+id/role_select_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8FAFC"
+    android:background="@color/bg_light"
     android:padding="24dp">
 
     <!-- Top Logo -->
     <ImageView
         android:id="@+id/iv_header_logo"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_marginTop="40dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="48dp"
         android:contentDescription="HelpDesk AI Logo"
         android:src="@drawable/ic_helpdesk_logo"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,10 +25,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:fontFamily="sans-serif-black"
         android:text="Welcome to HelpDesk AI"
-        android:textColor="#0F172A"
+        android:textColor="@color/text_primary"
         android:textSize="24sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_header_logo" />
@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:text="Choose your portal to continue"
-        android:textColor="#64748B"
+        android:textColor="@color/text_secondary"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -50,16 +50,16 @@
         android:id="@+id/card_student_role"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="36dp"
         android:clickable="true"
         android:focusable="true"
-        app:cardBackgroundColor="#FFFFFF"
+        app:cardBackgroundColor="@color/surface_card"
         app:cardCornerRadius="16dp"
-        app:cardElevation="4dp"
+        app:cardElevation="3dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_welcome_subtitle"
-        app:strokeColor="#E2E8F0"
+        app:strokeColor="@color/divider"
         app:strokeWidth="1dp">
 
         <LinearLayout
@@ -73,11 +73,11 @@
             <ImageView
                 android:layout_width="52dp"
                 android:layout_height="52dp"
-                android:background="#EBF5FF"
-                android:backgroundTint="#EBF5FF"
+                android:background="@drawable/bg_input_field"
                 android:padding="12dp"
                 android:src="@drawable/ic_student"
-                android:contentDescription="Student Icon" />
+                android:contentDescription="Student Icon"
+                app:tint="@color/primary" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -89,26 +89,25 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-bold"
-                    android:text="Student / Citizen"
-                    android:textColor="#1A56DB"
-                    android:textSize="17sp" />
+                    android:text="Student Portal"
+                    android:textColor="@color/primary"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="Raise complaint with photo and GPS, track your status"
-                    android:textColor="#64748B"
+                    android:text="Raise grievance with photo, GPS &amp; Groq AI, track status"
+                    android:textColor="@color/text_secondary"
                     android:textSize="13sp" />
             </LinearLayout>
 
-            <!-- Arrow -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="›"
-                android:textColor="#1A56DB"
+                android:textColor="@color/primary"
                 android:textSize="28sp"
                 android:layout_marginStart="8dp"/>
         </LinearLayout>
@@ -122,13 +121,13 @@
         android:layout_marginTop="16dp"
         android:clickable="true"
         android:focusable="true"
-        app:cardBackgroundColor="#FFFFFF"
+        app:cardBackgroundColor="@color/surface_card"
         app:cardCornerRadius="16dp"
-        app:cardElevation="4dp"
+        app:cardElevation="3dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/card_student_role"
-        app:strokeColor="#E2E8F0"
+        app:strokeColor="@color/divider"
         app:strokeWidth="1dp">
 
         <LinearLayout
@@ -142,11 +141,11 @@
             <ImageView
                 android:layout_width="52dp"
                 android:layout_height="52dp"
-                android:background="#F0FDF4"
-                android:backgroundTint="#F0FDF4"
+                android:background="@drawable/bg_input_field"
                 android:padding="12dp"
                 android:src="@drawable/ic_admin"
-                android:contentDescription="Admin Icon" />
+                android:contentDescription="Admin Icon"
+                app:tint="@color/status_resolved" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -158,26 +157,25 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-bold"
-                    android:text="Officer / Admin"
-                    android:textColor="#0D9488"
-                    android:textSize="17sp" />
+                    android:text="Officer / Admin Portal"
+                    android:textColor="@color/status_resolved"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="View, manage and reply to all complaints"
-                    android:textColor="#64748B"
+                    android:text="View campus tickets, draft replies with Groq AI"
+                    android:textColor="@color/text_secondary"
                     android:textSize="13sp" />
             </LinearLayout>
 
-            <!-- Arrow -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="›"
-                android:textColor="#0D9488"
+                android:textColor="@color/status_resolved"
                 android:textSize="28sp"
                 android:layout_marginStart="8dp"/>
         </LinearLayout>

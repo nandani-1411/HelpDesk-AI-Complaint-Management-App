@@ -4,22 +4,22 @@
     android:id="@+id/complaint_form_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8FAFC">
+    android:background="@color/bg_light">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#1A56DB"
+        android:background="@color/primary"
         app:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_form"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#1A56DB"
+            android:background="@color/primary"
             app:navigationIcon="@drawable/ic_back"
             app:title="@string/title_file_complaint"
-            app:titleTextColor="#FFFFFF" />
+            app:titleTextColor="@color/white" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-bold"
                 android:text="Grievance Title *"
-                android:textColor="#0F172A"
+                android:textColor="@color/text_primary"
                 android:textSize="14sp" />
 
             <EditText
@@ -52,9 +52,10 @@
                 android:background="@drawable/bg_input_field"
                 android:hint="@string/hint_title"
                 android:inputType="textCapSentences"
+                android:importantForAutofill="no"
                 android:maxLines="1"
-                android:textColor="#0F172A"
-                android:textColorHint="#94A3B8"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_muted"
                 android:textSize="15sp" />
 
             <!-- Description Label & Input -->
@@ -71,7 +72,7 @@
                     android:layout_weight="1"
                     android:fontFamily="sans-serif-bold"
                     android:text="Detailed Description *"
-                    android:textColor="#0F172A"
+                    android:textColor="@color/text_primary"
                     android:textSize="14sp" />
 
                 <!-- AI Enhance Trigger Button -->
@@ -98,8 +99,9 @@
                 android:gravity="top|start"
                 android:hint="@string/hint_description"
                 android:inputType="textMultiLine|textCapSentences"
-                android:textColor="#0F172A"
-                android:textColorHint="#94A3B8"
+                android:importantForAutofill="no"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_muted"
                 android:textSize="14sp" />
 
             <!-- Loading indicator for Groq API call -->
@@ -181,22 +183,44 @@
                     android:textSize="11sp" />
             </LinearLayout>
 
-            <!-- Category Spinner -->
+            <!-- Category Dropdown Selector -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:fontFamily="sans-serif-bold"
                 android:text="Select Category *"
-                android:textColor="#0F172A"
+                android:textColor="@color/text_primary"
                 android:textSize="14sp" />
 
-            <Spinner
-                android:id="@+id/spinner_category"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_category"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/bg_input_field" />
+                app:boxBackgroundColor="@color/input_bg"
+                app:boxCornerRadiusBottomEnd="10dp"
+                app:boxCornerRadiusBottomStart="10dp"
+                app:boxCornerRadiusTopEnd="10dp"
+                app:boxCornerRadiusTopStart="10dp"
+                app:boxStrokeColor="@color/input_stroke"
+                app:boxStrokeWidth="1.5dp"
+                app:endIconTint="@color/text_secondary"
+                app:hintEnabled="false">
+
+                <AutoCompleteTextView
+                    android:id="@+id/auto_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:editable="false"
+                    android:hint="Select Issue Category"
+                    android:inputType="none"
+                    android:paddingHorizontal="14dp"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_muted"
+                    android:textSize="14sp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Photo Proof Section -->
             <TextView
@@ -205,7 +229,7 @@
                 android:layout_marginTop="20dp"
                 android:fontFamily="sans-serif-bold"
                 android:text="@string/label_attach_photo"
-                android:textColor="#0F172A"
+                android:textColor="@color/text_primary"
                 android:textSize="14sp" />
 
             <com.google.android.material.button.MaterialButton
@@ -234,7 +258,7 @@
                     android:id="@+id/iv_captured_preview"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="#E2E8F0"
+                    android:background="@color/surface_tint"
                     android:scaleType="centerCrop" />
 
                 <TextView
@@ -258,7 +282,7 @@
                 android:layout_marginTop="20dp"
                 android:fontFamily="sans-serif-bold"
                 android:text="@string/label_gps_location"
-                android:textColor="#0F172A"
+                android:textColor="@color/text_primary"
                 android:textSize="14sp" />
 
             <com.google.android.material.button.MaterialButton
@@ -281,7 +305,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:background="#F0FDFA"
+                android:background="@color/surface_tint"
                 android:orientation="vertical"
                 android:padding="12dp"
                 android:visibility="gone">
@@ -312,11 +336,10 @@
                 android:layout_height="54dp"
                 android:layout_marginTop="28dp"
                 android:layout_marginBottom="40dp"
-                android:backgroundTint="#1A56DB"
-                android:fontFamily="sans-serif-bold"
+                android:backgroundTint="@color/primary"
                 android:text="@string/btn_submit_complaint"
                 android:textAllCaps="false"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/white"
                 android:textSize="16sp"
                 app:cornerRadius="12dp"
                 app:elevation="4dp" />

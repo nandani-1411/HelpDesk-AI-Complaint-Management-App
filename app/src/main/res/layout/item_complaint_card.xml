@@ -7,10 +7,10 @@
     android:layout_marginVertical="8dp"
     android:clickable="true"
     android:focusable="true"
-    app:cardBackgroundColor="#FFFFFF"
+    app:cardBackgroundColor="@color/surface_card"
     app:cardCornerRadius="14dp"
-    app:cardElevation="3dp"
-    app:strokeColor="#E2E8F0"
+    app:cardElevation="2dp"
+    app:strokeColor="@color/divider"
     app:strokeWidth="1dp">
 
     <LinearLayout
@@ -31,10 +31,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_badge_category"
-                android:fontFamily="sans-serif-medium"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"
                 android:text="Hostel &amp; Mess"
-                android:textColor="#334155"
-                android:textSize="12sp" />
+                android:textColor="@color/text_primary"
+                android:textSize="12sp"
+                android:textStyle="bold" />
 
             <View
                 android:layout_width="0dp"
@@ -46,10 +48,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_badge_pending"
-                android:fontFamily="sans-serif-bold"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"
                 android:text="Pending"
-                android:textColor="#B45309"
-                android:textSize="11sp" />
+                android:textColor="@color/status_pending"
+                android:textSize="11sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <!-- Complaint Title -->
@@ -59,11 +63,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:ellipsize="end"
-            android:fontFamily="sans-serif-bold"
             android:maxLines="1"
             android:text="Water leakage in 2nd Floor Washroom"
-            android:textColor="#0F172A"
-            android:textSize="16sp" />
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <!-- Complaint Description -->
         <TextView
@@ -74,7 +78,7 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:text="The main tap has been leaking continuously since yesterday, causing flooding on the corridor floor."
-            android:textColor="#64748B"
+            android:textColor="@color/text_secondary"
             android:textSize="13sp" />
 
         <!-- Image preview if attached -->
@@ -99,7 +103,8 @@
             <ImageView
                 android:layout_width="16dp"
                 android:layout_height="16dp"
-                android:src="@drawable/ic_location" />
+                android:src="@drawable/ic_location"
+                app:tint="@color/primary" />
 
             <TextView
                 android:id="@+id/tv_card_location"
@@ -110,7 +115,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="College Campus, Block B"
-                android:textColor="#0D9488"
+                android:textColor="@color/primary"
                 android:textSize="12sp" />
 
             <TextView
@@ -119,17 +124,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="20 Nov, 04:30 PM"
-                android:textColor="#94A3B8"
+                android:textColor="@color/text_muted"
                 android:textSize="11sp" />
         </LinearLayout>
 
-        <!-- Officer Reply Box (Visible when answered) -->
+        <!-- Officer Reply Box (Only visible when answered) -->
         <LinearLayout
             android:id="@+id/layout_card_officer_reply"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:background="#F0FDF4"
+            android:background="@drawable/bg_ai_suggestion"
             android:orientation="vertical"
             android:padding="10dp"
             android:visibility="gone">
@@ -137,18 +142,17 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-bold"
                 android:text="Official Response:"
-                android:textColor="#15803D"
-                android:textSize="12sp" />
+                android:textColor="@color/status_resolved"
+                android:textSize="12sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv_card_officer_reply"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:text="Plumber assigned. Will be fixed today by 5 PM."
-                android:textColor="#166534"
+                android:textColor="@color/text_primary"
                 android:textSize="13sp" />
         </LinearLayout>
 
