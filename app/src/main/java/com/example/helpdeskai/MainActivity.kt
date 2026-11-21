@@ -11,51 +11,44 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.helpdeskai.data.db.ComplaintDatabaseHelper
+import com.example.helpdeskai.data.model.User
+import com.example.helpdeskai.utils.SessionManager
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var dbHelper: ComplaintDatabaseHelper
+    private lateinit var sessionManager: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        // 1. Initialize SQLite Database Helper
+        // 1. Initialize SQLite Database Helper & Session Manager
         dbHelper = ComplaintDatabaseHelper(this)
+        sessionManager = SessionManager(this)
 
-        // 2. Start by displaying Animated Splash Screen
+        // 2. Display Animated Splash Screen
         setContentView(R.layout.activity_splash)
         applyEdgeToEdgeInsets(findViewById(R.id.splash_root))
 
         val branding = findViewById<View>(R.id.layout_branding)
-        
-        // Start Fade-in Animation on logo & title
         val fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in)
         branding?.startAnimation(fadeIn)
 
-        // 3. Transition to Role Selection after 1.8 seconds
+        // 3. Transition after 1.5 seconds
         Handler(Looper.getMainLooper()).postDelayed({
-            showRoleSelectionScreen()
-        }, 1800)
-    }
-
-    private fun showRoleSelectionScreen() {
-        setContentView(R.layout.activity_role_select)
-        applyEdgeToEdgeInsets(findViewById(R.id.role_select_root))
-
-        val root = findViewById<View>(R.id.role_select_root)
-        val slideUp = AnimationUtils.loadAnimation(this, R.anim.slide_up)
-        root?.startAnimation(slideUp)
-
-        // Student Card Click Listener -> opens Complaint List / My Complaints
-        findViewById<View>(R.id.card_student_role)?.setOnClickListener {
-            startActivity(Intent(this, ComplaintListActivity::class.java))
-        }
-
-        // Admin Card Click Listener -> opens Admin Dashboard
-        findViewById<View>(R.id.card_admin_role)?.setOnClickListener {
-            startActivity(Intent(this, AdminDashboardActivity::class.java))
-        }
+            if (sessionManager.isLoggedIn()) {
+                val role = sessionManager.getUserRole()
+                if (role.equals(User.ROLE_ADMIN, ignoreCase = true)) {
+                    startActivity(Intent(this, AdminDashboardActivity::class.java))
+                } else {
+                    startActivity(Intent(this, ComplaintListActivity::class.java))
+                }
+            } else {
+                startActivity(Intent(this, LoginActivity::class.java))
+            }
+            finish()
+        }, 1500)
     }
 
     private fun applyEdgeToEdgeInsets(view: View?) {

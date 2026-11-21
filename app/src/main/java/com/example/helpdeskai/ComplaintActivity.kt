@@ -7,6 +7,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -22,18 +23,20 @@ import com.example.helpdeskai.data.model.Complaint
 import com.example.helpdeskai.utils.CameraHelper
 import com.example.helpdeskai.utils.GroqAiService
 import com.example.helpdeskai.utils.LocationHelper
+import com.example.helpdeskai.utils.SessionManager
 import com.google.android.material.button.MaterialButton
 
 class ComplaintActivity : AppCompatActivity() {
 
     private lateinit var dbHelper: ComplaintDatabaseHelper
+    private lateinit var sessionManager: SessionManager
 
     // UI elements
     private lateinit var etTitle: EditText
     private lateinit var etDescription: EditText
     private lateinit var btnGroqEnhance: MaterialButton
     private lateinit var layoutGroqLoading: LinearLayout
-    private lateinit var spinnerCategory: Spinner
+    private lateinit var autoCategory: AutoCompleteTextView
     private lateinit var layoutAiSuggestion: LinearLayout
     private lateinit var tvAiBadgeHeader: TextView
     private lateinit var tvAiPredictionText: TextView
@@ -102,10 +105,11 @@ class ComplaintActivity : AppCompatActivity() {
         setContentView(R.layout.activity_complaint_form)
 
         dbHelper = ComplaintDatabaseHelper(this)
+        sessionManager = SessionManager(this)
 
         initViews()
         setupToolbar()
-        setupSpinner()
+        setupCategoryDropdown()
         setupAiEnhance()
         setupAiTextWatcher()
         setupListeners()
@@ -116,7 +120,7 @@ class ComplaintActivity : AppCompatActivity() {
         etDescription = findViewById(R.id.et_complaint_description)
         btnGroqEnhance = findViewById(R.id.btn_groq_enhance)
         layoutGroqLoading = findViewById(R.id.layout_groq_loading)
-        spinnerCategory = findViewById(R.id.spinner_category)
+        autoCategory = findViewById(R.id.auto_category)
         layoutAiSuggestion = findViewById(R.id.layout_ai_suggestion)
         tvAiBadgeHeader = findViewById(R.id.tv_ai_badge_header)
         tvAiPredictionText = findViewById(R.id.tv_ai_prediction_text)
@@ -142,14 +146,12 @@ class ComplaintActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupSpinner() {
-        val adapter = ArrayAdapter.createFromResource(
-            this,
-            R.array.complaint_categories,
-            android.R.layout.simple_spinner_item
-        )
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerCategory.adapter = adapter
+    private fun setupCategoryDropdown() {
+        val categories = resources.getStringArray(R.array.complaint_categories)
+            .filter { it != "Select Category" }
+            .toTypedArray()
+        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, categories)
+        autoCategory.setAdapter(adapter)
     }
 
     /**
@@ -180,8 +182,8 @@ class ComplaintActivity : AppCompatActivity() {
                     layoutGroqLoading.visibility = View.GONE
                     btnGroqEnhance.isEnabled = true
 
-                    // LLM auto-selects the category from the spinner
-                    selectSpinnerItem(result.category)
+                    // LLM auto-selects the category from the dropdown
+                    selectCategory(result.category)
                     aiPredictedCategory = result.category
 
                     // LLM rewrites the description in structured professional format
@@ -224,21 +226,14 @@ class ComplaintActivity : AppCompatActivity() {
 
         btnApplyAiSuggestion.setOnClickListener {
             aiPredictedCategory?.let { category ->
-                selectSpinnerItem(category)
+                selectCategory(category)
                 Toast.makeText(this, "Category applied: $category", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun selectSpinnerItem(categoryName: String) {
-        val count = spinnerCategory.adapter.count
-        for (i in 0 until count) {
-            val item = spinnerCategory.adapter.getItem(i).toString()
-            if (item.equals(categoryName, ignoreCase = true)) {
-                spinnerCategory.setSelection(i)
-                break
-            }
-        }
+    private fun selectCategory(categoryName: String) {
+        autoCategory.setText(categoryName, false)
     }
 
     private fun setupListeners() {
@@ -301,7 +296,7 @@ class ComplaintActivity : AppCompatActivity() {
     private fun submitGrievance() {
         val title = etTitle.text.toString().trim()
         val description = etDescription.text.toString().trim()
-        val selectedCategory = spinnerCategory.selectedItem?.toString() ?: ""
+        val selectedCategory = autoCategory.text.toString().trim()
 
         if (title.isEmpty()) {
             etTitle.error = "Please enter complaint title"
@@ -315,10 +310,13 @@ class ComplaintActivity : AppCompatActivity() {
             return
         }
 
-        if (selectedCategory == "Select Category" || selectedCategory.isEmpty()) {
+        if (selectedCategory.isEmpty()) {
             Toast.makeText(this, "Please select an issue category", Toast.LENGTH_SHORT).show()
+            autoCategory.requestFocus()
             return
         }
+
+        val userEmail = sessionManager.getUser()?.email ?: "student@gmail.com"
 
         val complaint = Complaint(
             title = title,
@@ -329,11 +327,17 @@ class ComplaintActivity : AppCompatActivity() {
             latitude = currentLatitude,
             longitude = currentLongitude,
             status = "Pending",
+            studentEmail = userEmail,
             timestamp = System.currentTimeMillis()
         )
 
         val rowId = dbHelper.insertComplaint(complaint)
         if (rowId > 0) {
+            com.example.helpdeskai.utils.NotificationHelper.sendComplaintSubmittedNotification(
+                context = this,
+                complaintId = rowId,
+                title = title
+            )
             Toast.makeText(this, "Grievance #$rowId submitted successfully!", Toast.LENGTH_LONG).show()
             finish()
         } else {

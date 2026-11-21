@@ -1,12 +1,12 @@
 package com.example.helpdeskai.data
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.helpdeskai.R
 import com.example.helpdeskai.data.model.Complaint
@@ -46,28 +46,30 @@ class ComplaintAdapter(
 
     override fun onBindViewHolder(holder: ComplaintViewHolder, position: Int) {
         val complaint = complaintList[position]
+        val context = holder.itemView.context
 
         holder.tvTitle.text = complaint.title
         holder.tvDescription.text = complaint.description
         holder.tvCategory.text = complaint.category
+        holder.tvCategory.setTextColor(ContextCompat.getColor(context, R.color.badge_cat_text))
         holder.tvTimestamp.text = dateFormat.format(Date(complaint.timestamp))
 
-        // Status Badge Styling
+        // Status Badge Styling with dynamic theme colors
         when (complaint.status.lowercase(Locale.ROOT)) {
             "resolved" -> {
                 holder.tvStatus.text = "Resolved"
                 holder.tvStatus.setBackgroundResource(R.drawable.bg_badge_resolved)
-                holder.tvStatus.setTextColor(Color.parseColor("#15803D"))
+                holder.tvStatus.setTextColor(ContextCompat.getColor(context, R.color.status_resolved))
             }
             "in progress" -> {
                 holder.tvStatus.text = "In Progress"
                 holder.tvStatus.setBackgroundResource(R.drawable.bg_badge_progress)
-                holder.tvStatus.setTextColor(Color.parseColor("#1D4ED8"))
+                holder.tvStatus.setTextColor(ContextCompat.getColor(context, R.color.status_in_progress))
             }
             else -> {
                 holder.tvStatus.text = "Pending"
                 holder.tvStatus.setBackgroundResource(R.drawable.bg_badge_pending)
-                holder.tvStatus.setTextColor(Color.parseColor("#B45309"))
+                holder.tvStatus.setTextColor(ContextCompat.getColor(context, R.color.status_pending))
             }
         }
 
@@ -92,8 +94,8 @@ class ComplaintAdapter(
             holder.layoutLocation.visibility = View.GONE
         }
 
-        // Officer Reply
-        if (!complaint.officerReply.isNullOrEmpty()) {
+        // Officer Reply - completely hide if empty or null
+        if (!complaint.officerReply.isNullOrBlank()) {
             holder.tvOfficerReply.text = complaint.officerReply
             holder.layoutOfficerReply.visibility = View.VISIBLE
         } else {
