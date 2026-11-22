@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="16dp">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="👥 Student Directory &amp; Audit"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_dialog_students_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Real-time registration details and last login tracking"
+            android:textColor="@color/primary_light"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <!-- Student Count Summary Banner -->
+    <TextView
+        android:id="@+id/tv_dialog_students_count_banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_badge_category"
+        android:padding="10dp"
+        android:text="Total Registered Students: 1 • Active Today: 1"
+        android:textColor="@color/primary"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <!-- RecyclerView of Students -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_dialog_students"
+        android:layout_width="match_parent"
+        android:layout_height="320dp"
+        android:layout_marginTop="8dp"
+        android:clipToPadding="false"
+        android:paddingBottom="8dp" />
+
+    <TextView
+        android:id="@+id/tv_dialog_students_empty"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:gravity="center"
+        android:text="No registered students found"
+        android:textColor="@color/text_muted"
+        android:textSize="14sp"
+        android:visibility="gone" />
+
+</LinearLayout>

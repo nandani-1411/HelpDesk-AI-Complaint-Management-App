@@ -1,313 +1,473 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/complaint_list_root"
+    android:id="@+id/drawer_layout_student"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_light">
+    android:fitsSystemWindows="true">
 
-    <!-- Top AppBar -->
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/primary"
-        app:elevation="0dp">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar_complaints"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/primary"
-            app:navigationIcon="@drawable/ic_menu"
-            app:title="Student Grievance Portal"
-            app:titleTextColor="@color/white"
-            app:subtitleTextColor="@color/primary_light" />
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <LinearLayout
+    <!-- Main Student Dashboard Content -->
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/complaint_list_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:background="@color/bg_light">
 
-        <!-- Student Profile Card Banner -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_student_profile"
+        <!-- Top AppBar -->
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="6dp"
-            android:clickable="true"
-            android:focusable="true"
-            app:cardBackgroundColor="@color/surface_card"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="2dp"
-            app:strokeColor="@color/divider"
-            app:strokeWidth="1dp">
+            android:background="@color/primary"
+            app:elevation="0dp">
 
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar_complaints"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/primary"
+                app:navigationIcon="@drawable/ic_menu"
+                app:title="Student Grievance Portal"
+                app:titleTextColor="@color/white"
+                app:subtitleTextColor="@color/primary_light" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <!-- Student Profile Summary Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_student_profile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="6dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="@color/surface_card"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:strokeColor="@color/divider"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="14dp">
+
+                    <TextView
+                        android:id="@+id/tv_student_avatar"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/bg_button_primary"
+                        android:gravity="center"
+                        android:text="NP"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_student_name_banner"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Nandani Parmar"
+                            android:textColor="@color/text_primary"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tv_student_id_banner"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="1dp"
+                            android:text="ID: 5066 • Tap to edit profile"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_student_ticket_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_badge_category"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="4dp"
+                        android:text="0 Tickets"
+                        android:textColor="@color/primary"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Prominent SaaS-Style "Raise New Complaint" CTA Banner Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_prominent_raise"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="@color/surface_card"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:strokeColor="@color/primary"
+                app:strokeWidth="1.5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="14dp"
+                    android:paddingVertical="12dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Facing an issue on campus?"
+                            android:textColor="@color/text_primary"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Submit ticket with Groq AI &amp; GPS auto-tracking"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_raise_prominent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="8dp"
+                        android:backgroundTint="@color/primary"
+                        android:paddingHorizontal="14dp"
+                        android:text="+ Raise Issue"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:cornerRadius="10dp"
+                        app:elevation="2dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 4 SaaS Summary Metric Cards (Total, Pending, Progress, Resolved) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="14dp">
+                android:paddingHorizontal="12dp"
+                android:paddingBottom="4dp">
 
-                <!-- Avatar Circle with Initials -->
-                <TextView
-                    android:id="@+id/tv_student_avatar"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@drawable/bg_button_primary"
-                    android:gravity="center"
-                    android:text="S"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-                <LinearLayout
+                <!-- Total -->
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
+                    android:layout_margin="4dp"
                     android:layout_weight="1"
-                    android:orientation="vertical">
+                    app:cardBackgroundColor="@color/surface_card"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="1dp"
+                    app:strokeColor="@color/divider"
+                    app:strokeWidth="1dp">
 
-                    <TextView
-                        android:id="@+id/tv_student_name_banner"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Student"
-                        android:textColor="@color/text_primary"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingVertical="8dp">
 
-                    <TextView
-                        android:id="@+id/tv_student_id_banner"
-                        android:layout_width="wrap_content"
+                        <TextView
+                            android:id="@+id/tv_student_stat_total"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/primary"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Total"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Pending -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/surface_card"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="1dp"
+                    app:strokeColor="@color/status_pending"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="1dp"
-                        android:text="Roll No. • Tap to edit profile"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="12sp" />
-                </LinearLayout>
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingVertical="8dp">
 
-                <TextView
-                    android:id="@+id/tv_student_ticket_count"
+                        <TextView
+                            android:id="@+id/tv_student_stat_pending"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/status_pending"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Pending"
+                            android:textColor="@color/status_pending"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- In Progress -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/surface_card"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="1dp"
+                    app:strokeColor="@color/status_in_progress"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingVertical="8dp">
+
+                        <TextView
+                            android:id="@+id/tv_student_stat_progress"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/status_in_progress"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Progress"
+                            android:textColor="@color/status_in_progress"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Resolved -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/surface_card"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="1dp"
+                    app:strokeColor="@color/status_resolved"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingVertical="8dp">
+
+                        <TextView
+                            android:id="@+id/tv_student_stat_resolved"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="@color/status_resolved"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Resolved"
+                            android:textColor="@color/status_resolved"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+            <!-- Filter Chips Row -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="4dp"
+                android:scrollbars="none">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chip_group_student_filters"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_badge_category"
-                    android:paddingHorizontal="10dp"
-                    android:paddingVertical="4dp"
-                    android:text="0 Tickets"
-                    android:textColor="@color/primary"
-                    android:textSize="11sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+                    app:singleSelection="true">
 
-        <!-- Student Stats Strip (Pending / In Progress / Resolved) -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingHorizontal="12dp"
-            android:paddingBottom="4dp">
-
-            <!-- Pending -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:layout_weight="1"
-                app:cardBackgroundColor="@color/surface_card"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="1dp"
-                app:strokeColor="@color/status_pending"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingVertical="8dp">
-
-                    <TextView
-                        android:id="@+id/tv_student_stat_pending"
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_student_all"
+                        style="@style/Widget.Material3.Chip.Filter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="@color/status_pending"
+                        android:checked="true"
+                        android:text="All Tickets" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_student_pending"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pending" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_student_progress"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="In Progress" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_student_resolved"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Resolved" />
+
+                </com.google.android.material.chip.ChipGroup>
+            </HorizontalScrollView>
+
+            <!-- Complaints List / Empty State Frame -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!-- RecyclerView -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_complaints"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="88dp" />
+
+                <!-- Empty State View -->
+                <LinearLayout
+                    android:id="@+id/layout_empty_state"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="32dp"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/ic_empty_box"
+                        app:tint="@color/text_muted" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="No Grievances Found"
+                        android:textColor="@color/text_primary"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:text="Pending"
-                        android:textColor="@color/status_pending"
-                        android:textSize="10sp"
-                        android:textStyle="bold" />
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:text="All caught up! You have no complaints in this view. Use the button below to report an issue."
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_empty_action"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:backgroundTint="@color/primary"
+                        android:text="+ Report Grievance"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        app:cornerRadius="10dp" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
 
-            <!-- In Progress -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:layout_weight="1"
-                app:cardBackgroundColor="@color/surface_card"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="1dp"
-                app:strokeColor="@color/status_in_progress"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingVertical="8dp">
-
-                    <TextView
-                        android:id="@+id/tv_student_stat_progress"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="@color/status_in_progress"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:text="Progress"
-                        android:textColor="@color/status_in_progress"
-                        android:textSize="10sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Resolved -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:layout_weight="1"
-                app:cardBackgroundColor="@color/surface_card"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="1dp"
-                app:strokeColor="@color/status_resolved"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingVertical="8dp">
-
-                    <TextView
-                        android:id="@+id/tv_student_stat_resolved"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="@color/status_resolved"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:text="Resolved"
-                        android:textColor="@color/status_resolved"
-                        android:textSize="10sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+            </FrameLayout>
 
         </LinearLayout>
 
-        <!-- Complaints List / Empty State Frame -->
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <!-- Floating Action Button -->
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/fab_new_complaint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="20dp"
+            android:backgroundTint="@color/primary"
+            android:text="Raise Issue"
+            android:textColor="@color/white"
+            app:icon="@drawable/ic_add"
+            app:iconTint="@color/white" />
 
-            <!-- RecyclerView -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_complaints"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:paddingTop="6dp"
-                android:paddingBottom="88dp" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-            <!-- Empty State View -->
-            <LinearLayout
-                android:id="@+id/layout_empty_state"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="32dp"
-                android:visibility="gone">
+    <!-- Navigation Drawer View -->
+    <include layout="@layout/layout_student_drawer" />
 
-                <ImageView
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:src="@drawable/ic_empty_box"
-                    app:tint="@color/text_muted" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/empty_complaints_title"
-                    android:textColor="@color/text_primary"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center"
-                    android:text="@string/empty_complaints_desc"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="14sp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_empty_action"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:backgroundTint="@color/primary"
-                    android:text="File First Grievance"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white"
-                    app:cornerRadius="10dp" />
-            </LinearLayout>
-
-        </FrameLayout>
-
-    </LinearLayout>
-
-    <!-- Floating Action Button -->
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/fab_new_complaint"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="20dp"
-        android:backgroundTint="@color/primary"
-        android:text="Raise Issue"
-        android:textColor="@color/white"
-        app:icon="@drawable/ic_add"
-        app:iconTint="@color/white" />
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.drawerlayout.widget.DrawerLayout>
