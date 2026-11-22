@@ -52,6 +52,16 @@ class LoginActivity : AppCompatActivity() {
         ivTogglePassword = findViewById(R.id.iv_toggle_password)
         btnSubmit = findViewById(R.id.btn_login_submit)
         tvGoToRegister = findViewById(R.id.tv_go_to_register)
+
+        // Handle prefilled email or post-registration banner if passed
+        val prefilledEmail = intent.getStringExtra("EXTRA_PREFILLED_EMAIL")
+        if (!prefilledEmail.isNullOrBlank()) {
+            etEmail.setText(prefilledEmail)
+            etPassword.requestFocus()
+        }
+        if (intent.getBooleanExtra("EXTRA_REG_SUCCESS", false)) {
+            Toast.makeText(this, "Account created! Please sign in with your password.", Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun setupListeners() {

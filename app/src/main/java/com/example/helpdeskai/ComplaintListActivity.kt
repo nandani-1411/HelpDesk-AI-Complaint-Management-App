@@ -9,15 +9,20 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.helpdeskai.data.ComplaintAdapter
 import com.example.helpdeskai.data.db.ComplaintDatabaseHelper
+import com.example.helpdeskai.data.model.Complaint
 import com.example.helpdeskai.utils.SessionManager
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.chip.ChipGroup
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 
 class ComplaintListActivity : AppCompatActivity() {
@@ -25,31 +30,57 @@ class ComplaintListActivity : AppCompatActivity() {
     private lateinit var dbHelper: ComplaintDatabaseHelper
     private lateinit var sessionManager: SessionManager
 
+    private lateinit var drawerLayout: DrawerLayout
     private lateinit var rvComplaints: RecyclerView
     private lateinit var layoutEmptyState: LinearLayout
     private lateinit var btnEmptyAction: MaterialButton
     private lateinit var fabNewComplaint: ExtendedFloatingActionButton
     private lateinit var cardStudentProfile: MaterialCardView
+    private lateinit var cardProminentRaise: MaterialCardView
+    private lateinit var btnRaiseProminent: MaterialButton
+    private lateinit var chipGroupFilters: ChipGroup
+
     private lateinit var tvStudentNameBanner: TextView
     private lateinit var tvStudentIdBanner: TextView
     private lateinit var tvStudentTicketCount: TextView
     private lateinit var tvStudentAvatar: TextView
+
+    private lateinit var tvStudentStatTotal: TextView
     private lateinit var tvStudentStatPending: TextView
     private lateinit var tvStudentStatProgress: TextView
     private lateinit var tvStudentStatResolved: TextView
+
+    // Drawer Views
+    private lateinit var tvDrawerAvatar: TextView
+    private lateinit var tvDrawerUserName: TextView
+    private lateinit var tvDrawerUserEmail: TextView
+
     private lateinit var adapter: ComplaintAdapter
+    private var allComplaints: List<Complaint> = emptyList()
+    private var currentFilter = "All"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_complaint_list)
 
         dbHelper = ComplaintDatabaseHelper(this)
         sessionManager = SessionManager(this)
 
+        // Protect route
+        if (!sessionManager.isLoggedIn()) {
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+            return
+        }
+
+        setContentView(R.layout.activity_complaint_list)
+
         initViews()
         setupToolbar()
+        setupDrawerNavigation()
         setupRecyclerView()
+        setupFilters()
         setupListeners()
+        setupBackPressHandler()
         requestNotificationPermission()
     }
 
@@ -68,18 +99,30 @@ class ComplaintListActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
+        drawerLayout = findViewById(R.id.drawer_layout_student)
         rvComplaints = findViewById(R.id.rv_complaints)
         layoutEmptyState = findViewById(R.id.layout_empty_state)
         btnEmptyAction = findViewById(R.id.btn_empty_action)
         fabNewComplaint = findViewById(R.id.fab_new_complaint)
         cardStudentProfile = findViewById(R.id.card_student_profile)
+        cardProminentRaise = findViewById(R.id.card_prominent_raise)
+        btnRaiseProminent = findViewById(R.id.btn_raise_prominent)
+        chipGroupFilters = findViewById(R.id.chip_group_student_filters)
+
         tvStudentNameBanner = findViewById(R.id.tv_student_name_banner)
         tvStudentIdBanner = findViewById(R.id.tv_student_id_banner)
         tvStudentTicketCount = findViewById(R.id.tv_student_ticket_count)
         tvStudentAvatar = findViewById(R.id.tv_student_avatar)
+
+        tvStudentStatTotal = findViewById(R.id.tv_student_stat_total)
         tvStudentStatPending = findViewById(R.id.tv_student_stat_pending)
         tvStudentStatProgress = findViewById(R.id.tv_student_stat_progress)
         tvStudentStatResolved = findViewById(R.id.tv_student_stat_resolved)
+
+        // Drawer Profile Bindings
+        tvDrawerAvatar = findViewById(R.id.tv_drawer_avatar)
+        tvDrawerUserName = findViewById(R.id.tv_drawer_user_name)
+        tvDrawerUserEmail = findViewById(R.id.tv_drawer_user_email)
 
         cardStudentProfile.setOnClickListener {
             showProfileEditDialog()
@@ -89,7 +132,11 @@ class ComplaintListActivity : AppCompatActivity() {
     private fun setupToolbar() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar_complaints)
         toolbar.setNavigationOnClickListener {
-            showStudentMenu()
+            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                drawerLayout.closeDrawer(GravityCompat.START)
+            } else {
+                drawerLayout.openDrawer(GravityCompat.START)
+            }
         }
         toolbar.inflateMenu(R.menu.menu_student_toolbar)
         toolbar.setOnMenuItemClickListener { item ->
@@ -102,62 +149,68 @@ class ComplaintListActivity : AppCompatActivity() {
         }
     }
 
-    private fun showStudentMenu() {
-        val options = arrayOf(
-            "🔔 Notification Inbox",
-            "👤 My Profile & Settings",
-            "➕ Raise Grievance",
-            "🚪 Sign Out"
-        )
-        AlertDialog.Builder(this)
-            .setTitle("HelpDesk Menu")
-            .setItems(options) { _, which ->
-                when (which) {
-                    0 -> startActivity(Intent(this, InboxActivity::class.java))
-                    1 -> showProfileEditDialog()
-                    2 -> startActivity(Intent(this, ComplaintActivity::class.java))
-                    3 -> showLogoutConfirmation()
-                }
-            }
-            .show()
+    private fun setupDrawerNavigation() {
+        findViewById<View>(R.id.nav_item_dashboard)?.setOnClickListener {
+            drawerLayout.closeDrawer(GravityCompat.START)
+        }
+        findViewById<View>(R.id.nav_item_raise)?.setOnClickListener {
+            drawerLayout.closeDrawer(GravityCompat.START)
+            startActivity(Intent(this, ComplaintActivity::class.java))
+        }
+        findViewById<View>(R.id.nav_item_inbox)?.setOnClickListener {
+            drawerLayout.closeDrawer(GravityCompat.START)
+            startActivity(Intent(this, InboxActivity::class.java))
+        }
+        findViewById<View>(R.id.nav_item_profile)?.setOnClickListener {
+            drawerLayout.closeDrawer(GravityCompat.START)
+            showProfileEditDialog()
+        }
+        findViewById<View>(R.id.nav_item_faq)?.setOnClickListener {
+            drawerLayout.closeDrawer(GravityCompat.START)
+            showFaqDialog()
+        }
+        findViewById<View>(R.id.nav_item_logout)?.setOnClickListener {
+            drawerLayout.closeDrawer(GravityCompat.START)
+            showLogoutConfirmation()
+        }
     }
 
-    private fun showNotificationCenterDialog() {
-        val userEmail = sessionManager.getUser()?.email
-        val list = if (!userEmail.isNullOrEmpty()) {
-            dbHelper.getComplaintsByStudent(userEmail)
-        } else {
-            dbHelper.getAllComplaints()
-        }
-
-        if (list.isEmpty()) {
-            AlertDialog.Builder(this)
-                .setTitle("Notifications")
-                .setMessage("No notifications yet. You will receive real-time alerts when officers review or resolve your complaints.")
-                .setPositiveButton("OK", null)
-                .show()
-            return
-        }
-
-        val notifications = list.map { complaint ->
-            val statusIcon = when (complaint.status.lowercase()) {
-                "resolved" -> "✅"
-                "in progress" -> "🔄"
-                else -> "⏳"
+    private fun setupBackPressHandler() {
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    drawerLayout.closeDrawer(GravityCompat.START)
+                } else {
+                    finish()
+                }
             }
-            val replyInfo = if (!complaint.officerReply.isNullOrBlank()) {
-                "\n💬 Officer: ${complaint.officerReply}"
-            } else ""
+        })
+    }
 
-            "$statusIcon #${complaint.id}: ${complaint.title}\nStatus: ${complaint.status.uppercase()}$replyInfo"
-        }.toTypedArray()
+    private fun setupFilters() {
+        chipGroupFilters.setOnCheckedStateChangeListener { _, checkedIds ->
+            if (checkedIds.isEmpty()) return@setOnCheckedStateChangeListener
+            currentFilter = when (checkedIds[0]) {
+                R.id.chip_student_pending -> "Pending"
+                R.id.chip_student_progress -> "In Progress"
+                R.id.chip_student_resolved -> "Resolved"
+                else -> "All"
+            }
+            applyFilter()
+        }
+    }
 
+    private fun showFaqDialog() {
         AlertDialog.Builder(this)
-            .setTitle("🔔 Grievance Activity & Alerts")
-            .setItems(notifications) { _, which ->
-                // Tapping item can highlight or show detail
-            }
-            .setPositiveButton("Close", null)
+            .setTitle("Campus Support Guidelines & SLA")
+            .setMessage(
+                "• Infrastructure & Maintenance: Resolved within 48 business hours.\n\n" +
+                "• Hostel & Mess Facilities: Addressed within 24 hours.\n\n" +
+                "• Academics, Exams & Faculty: Processed within 72 business hours.\n\n" +
+                "• IT Services & WiFi: Handled same day.\n\n" +
+                "Official grievance decisions are reviewed by appointed college administration."
+            )
+            .setPositiveButton("Understood", null)
             .show()
     }
 
@@ -210,13 +263,22 @@ class ComplaintListActivity : AppCompatActivity() {
     private fun setupRecyclerView() {
         rvComplaints.layoutManager = LinearLayoutManager(this)
         adapter = ComplaintAdapter(emptyList()) { complaint ->
-            // Card clicked - can view details
+            // Card clicked - shows details or timeline status
+            Toast.makeText(this, "Ticket #${complaint.id}: ${complaint.status}", Toast.LENGTH_SHORT).show()
         }
         rvComplaints.adapter = adapter
     }
 
     private fun setupListeners() {
         fabNewComplaint.setOnClickListener {
+            startActivity(Intent(this, ComplaintActivity::class.java))
+        }
+
+        cardProminentRaise.setOnClickListener {
+            startActivity(Intent(this, ComplaintActivity::class.java))
+        }
+
+        btnRaiseProminent.setOnClickListener {
             startActivity(Intent(this, ComplaintActivity::class.java))
         }
 
@@ -232,35 +294,55 @@ class ComplaintListActivity : AppCompatActivity() {
             val idDisplay = if (!user.studentId.isNullOrEmpty()) user.studentId else "Student"
             tvStudentIdBanner.text = "ID: $idDisplay • Tap to edit profile"
             findViewById<Toolbar>(R.id.toolbar_complaints).subtitle = "${user.name} ($idDisplay)"
-            // Set initials avatar
+
+            // Drawer Bindings
+            tvDrawerUserName.text = user.name
+            tvDrawerUserEmail.text = user.email
+
+            // Initials avatar
             val initials = user.name.split(" ").mapNotNull { it.firstOrNull()?.uppercase() }.take(2).joinToString("")
-            tvStudentAvatar.text = if (initials.isNotEmpty()) initials else "S"
+            val avatarStr = if (initials.isNotEmpty()) initials else "S"
+            tvStudentAvatar.text = avatarStr
+            tvDrawerAvatar.text = avatarStr
         }
 
         val userEmail = user?.email
-        val list = if (!userEmail.isNullOrEmpty()) {
+        allComplaints = if (!userEmail.isNullOrEmpty()) {
             dbHelper.getComplaintsByStudent(userEmail)
         } else {
             dbHelper.getAllComplaints()
         }
 
-        tvStudentTicketCount.text = "${list.size} ${if (list.size == 1) "Ticket" else "Tickets"}"
+        tvStudentTicketCount.text = "${allComplaints.size} ${if (allComplaints.size == 1) "Ticket" else "Tickets"}"
 
-        // Populate stats
-        val pending = list.count { it.status.equals("Pending", ignoreCase = true) }
-        val inProgress = list.count { it.status.equals("In Progress", ignoreCase = true) }
-        val resolved = list.count { it.status.equals("Resolved", ignoreCase = true) }
+        // Populate 4 SaaS metric cards
+        val pending = allComplaints.count { it.status.equals("Pending", ignoreCase = true) }
+        val inProgress = allComplaints.count { it.status.equals("In Progress", ignoreCase = true) }
+        val resolved = allComplaints.count { it.status.equals("Resolved", ignoreCase = true) }
+
+        tvStudentStatTotal.text = allComplaints.size.toString()
         tvStudentStatPending.text = pending.toString()
         tvStudentStatProgress.text = inProgress.toString()
         tvStudentStatResolved.text = resolved.toString()
 
-        if (list.isEmpty()) {
+        applyFilter()
+    }
+
+    private fun applyFilter() {
+        val filteredList = when (currentFilter) {
+            "Pending" -> allComplaints.filter { it.status.equals("Pending", ignoreCase = true) }
+            "In Progress" -> allComplaints.filter { it.status.equals("In Progress", ignoreCase = true) }
+            "Resolved" -> allComplaints.filter { it.status.equals("Resolved", ignoreCase = true) }
+            else -> allComplaints
+        }
+
+        if (filteredList.isEmpty()) {
             rvComplaints.visibility = View.GONE
             layoutEmptyState.visibility = View.VISIBLE
         } else {
             layoutEmptyState.visibility = View.GONE
             rvComplaints.visibility = View.VISIBLE
-            adapter.updateList(list)
+            adapter.updateList(filteredList)
         }
     }
 }

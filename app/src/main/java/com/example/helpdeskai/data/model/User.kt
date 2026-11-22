@@ -9,7 +9,9 @@ data class User(
     val email: String,
     val password: String,
     val studentId: String? = null,
-    val role: String = ROLE_STUDENT // "STUDENT" or "ADMIN"
+    val role: String = ROLE_STUDENT, // "STUDENT" or "ADMIN"
+    val createdAt: Long = System.currentTimeMillis(),
+    val lastLogin: Long = System.currentTimeMillis()
 ) {
     companion object {
         const val ROLE_STUDENT = "STUDENT"
@@ -19,3 +21,4 @@ data class User(
     val isAdmin: Boolean
         get() = role.equals(ROLE_ADMIN, ignoreCase = true)
 }
+

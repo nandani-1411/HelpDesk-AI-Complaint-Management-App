@@ -1,5 +1,6 @@
 package com.example.helpdeskai
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
@@ -126,10 +127,25 @@ class RegisterActivity : AppCompatActivity() {
 
         val rowId = dbHelper.registerStudent(name, email, password, studentId)
         if (rowId > 0) {
-            Toast.makeText(this, "Account created successfully! Please sign in.", Toast.LENGTH_LONG).show()
+            // Auto-login newly registered student directly to their dashboard
+            val user = com.example.helpdeskai.data.model.User(
+                id = rowId,
+                name = name,
+                email = email.lowercase(),
+                password = password,
+                studentId = studentId,
+                role = com.example.helpdeskai.data.model.User.ROLE_STUDENT,
+                createdAt = System.currentTimeMillis(),
+                lastLogin = System.currentTimeMillis()
+            )
+            sessionManager.saveUserSession(user)
+            Toast.makeText(this, "🎉 Welcome, $name! Your account has been created.", Toast.LENGTH_LONG).show()
+            val intent = Intent(this, ComplaintListActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
             finish()
         } else {
-            Toast.makeText(this, "Registration failed. This email may already be in use.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Registration failed. This email is already registered.", Toast.LENGTH_LONG).show()
         }
     }
 }

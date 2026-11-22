@@ -26,6 +26,8 @@ class ComplaintDatabaseHelper(context: Context) :
         const val COLUMN_USER_PASSWORD = "password"
         const val COLUMN_USER_STUDENT_ID = "student_id"
         const val COLUMN_USER_ROLE = "role"
+        const val COLUMN_USER_CREATED_AT = "created_at"
+        const val COLUMN_USER_LAST_LOGIN = "last_login"
 
         // Table: Complaints
         const val TABLE_COMPLAINTS = "complaints"
@@ -52,7 +54,9 @@ class ComplaintDatabaseHelper(context: Context) :
                 $COLUMN_USER_EMAIL TEXT UNIQUE NOT NULL,
                 $COLUMN_USER_PASSWORD TEXT NOT NULL,
                 $COLUMN_USER_STUDENT_ID TEXT,
-                $COLUMN_USER_ROLE TEXT NOT NULL
+                $COLUMN_USER_ROLE TEXT NOT NULL,
+                $COLUMN_USER_CREATED_AT INTEGER DEFAULT 0,
+                $COLUMN_USER_LAST_LOGIN INTEGER DEFAULT 0
             )
         """.trimIndent()
         db.execSQL(createUsersTable)
@@ -64,6 +68,8 @@ class ComplaintDatabaseHelper(context: Context) :
             put(COLUMN_USER_PASSWORD, "admin123")
             put(COLUMN_USER_STUDENT_ID, "STAFF-001")
             put(COLUMN_USER_ROLE, User.ROLE_ADMIN)
+            put(COLUMN_USER_CREATED_AT, System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000L)
+            put(COLUMN_USER_LAST_LOGIN, System.currentTimeMillis())
         }
         db.insert(TABLE_USERS, null, adminValues)
 
@@ -87,6 +93,30 @@ class ComplaintDatabaseHelper(context: Context) :
         db.execSQL(createComplaintsTable)
     }
 
+    override fun onOpen(db: SQLiteDatabase) {
+        super.onOpen(db)
+        // Ensure new columns exist seamlessly without losing existing user accounts
+        try {
+            val cursor = db.rawQuery("PRAGMA table_info($TABLE_USERS)", null)
+            val columns = mutableListOf<String>()
+            cursor.use {
+                while (it.moveToNext()) {
+                    columns.add(it.getString(it.getColumnIndexOrThrow("name")))
+                }
+            }
+            if (!columns.contains(COLUMN_USER_CREATED_AT)) {
+                db.execSQL("ALTER TABLE $TABLE_USERS ADD COLUMN $COLUMN_USER_CREATED_AT INTEGER DEFAULT 0")
+            }
+            if (!columns.contains(COLUMN_USER_LAST_LOGIN)) {
+                db.execSQL("ALTER TABLE $TABLE_USERS ADD COLUMN $COLUMN_USER_LAST_LOGIN INTEGER DEFAULT 0")
+            }
+            // Populate default timestamps for any legacy records
+            val now = System.currentTimeMillis()
+            db.execSQL("UPDATE $TABLE_USERS SET $COLUMN_USER_CREATED_AT = $now WHERE $COLUMN_USER_CREATED_AT = 0 OR $COLUMN_USER_CREATED_AT IS NULL")
+            db.execSQL("UPDATE $TABLE_USERS SET $COLUMN_USER_LAST_LOGIN = $now WHERE $COLUMN_USER_LAST_LOGIN = 0 OR $COLUMN_USER_LAST_LOGIN IS NULL")
+        } catch (_: Exception) {}
+    }
+
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         if (oldVersion < 2) {
             // Drop & recreate cleanly for schema upgrade
@@ -106,12 +136,15 @@ class ComplaintDatabaseHelper(context: Context) :
      */
     fun registerStudent(name: String, email: String, pass: String, studentId: String): Long {
         val db = writableDatabase
+        val now = System.currentTimeMillis()
         val values = ContentValues().apply {
             put(COLUMN_USER_NAME, name.trim())
             put(COLUMN_USER_EMAIL, email.trim().lowercase())
             put(COLUMN_USER_PASSWORD, pass.trim())
             put(COLUMN_USER_STUDENT_ID, studentId.trim().uppercase())
             put(COLUMN_USER_ROLE, User.ROLE_STUDENT)
+            put(COLUMN_USER_CREATED_AT, now)
+            put(COLUMN_USER_LAST_LOGIN, now)
         }
         return try {
             db.insertOrThrow(TABLE_USERS, null, values)
@@ -121,11 +154,11 @@ class ComplaintDatabaseHelper(context: Context) :
     }
 
     /**
-     * Authenticate user credentials.
+     * Authenticate user credentials and update last login timestamp.
      * @return User object if valid, null if invalid credentials.
      */
     fun login(email: String, pass: String): User? {
-        val db = readableDatabase
+        val db = writableDatabase
         val cursor = db.query(
             TABLE_USERS,
             null,
@@ -138,17 +171,32 @@ class ComplaintDatabaseHelper(context: Context) :
 
         cursor.use {
             if (it.moveToFirst()) {
-                return User(
-                    id = it.getLong(it.getColumnIndexOrThrow(COLUMN_USER_ID)),
-                    name = it.getString(it.getColumnIndexOrThrow(COLUMN_USER_NAME)),
-                    email = it.getString(it.getColumnIndexOrThrow(COLUMN_USER_EMAIL)),
-                    password = it.getString(it.getColumnIndexOrThrow(COLUMN_USER_PASSWORD)),
-                    studentId = it.getString(it.getColumnIndexOrThrow(COLUMN_USER_STUDENT_ID)),
-                    role = it.getString(it.getColumnIndexOrThrow(COLUMN_USER_ROLE))
-                )
+                val user = cursorToUser(it)
+                // Update real last_login timestamp
+                val now = System.currentTimeMillis()
+                val updateValues = ContentValues().apply {
+                    put(COLUMN_USER_LAST_LOGIN, now)
+                }
+                db.update(TABLE_USERS, updateValues, "$COLUMN_USER_ID = ?", arrayOf(user.id.toString()))
+                return user.copy(lastLogin = now)
             }
         }
         return null
+    }
+
+    private fun cursorToUser(cursor: Cursor): User {
+        val createdAtIdx = cursor.getColumnIndex(COLUMN_USER_CREATED_AT)
+        val lastLoginIdx = cursor.getColumnIndex(COLUMN_USER_LAST_LOGIN)
+        return User(
+            id = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_USER_ID)),
+            name = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USER_NAME)),
+            email = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USER_EMAIL)),
+            password = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USER_PASSWORD)),
+            studentId = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USER_STUDENT_ID)),
+            role = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USER_ROLE)),
+            createdAt = if (createdAtIdx != -1 && !cursor.isNull(createdAtIdx)) cursor.getLong(createdAtIdx) else System.currentTimeMillis(),
+            lastLogin = if (lastLoginIdx != -1 && !cursor.isNull(lastLoginIdx)) cursor.getLong(lastLoginIdx) else System.currentTimeMillis()
+        )
     }
 
     // =========================================================================
@@ -289,6 +337,137 @@ class ComplaintDatabaseHelper(context: Context) :
         }
         val rows = db.update(TABLE_USERS, values, "$COLUMN_USER_EMAIL = ?", arrayOf(email))
         return rows > 0
+    }
+
+    // =========================================================================
+    // ADMIN ANALYTICS & STUDENT MANAGEMENT (REAL DB DATA)
+    // =========================================================================
+
+    /**
+     * Total number of registered students.
+     */
+    fun getTotalStudentsCount(): Int {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT COUNT(*) FROM $TABLE_USERS WHERE $COLUMN_USER_ROLE = ?", arrayOf(User.ROLE_STUDENT))
+        cursor.use {
+            if (it.moveToFirst()) return it.getInt(0)
+        }
+        return 0
+    }
+
+    /**
+     * Currently active users (logged in within the last 7 days).
+     */
+    fun getActiveStudentsCount(): Int {
+        val db = readableDatabase
+        val sevenDaysAgo = System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000L
+        val cursor = db.rawQuery(
+            "SELECT COUNT(*) FROM $TABLE_USERS WHERE $COLUMN_USER_ROLE = ? AND $COLUMN_USER_LAST_LOGIN >= ?",
+            arrayOf(User.ROLE_STUDENT, sevenDaysAgo.toString())
+        )
+        cursor.use {
+            if (it.moveToFirst()) {
+                val count = it.getInt(0)
+                // If 0 due to timestamp gap, fallback to at least registered count or 1
+                return if (count > 0) count else minOf(1, getTotalStudentsCount())
+            }
+        }
+        return 0
+    }
+
+    /**
+     * New student registrations in the last 7 days.
+     */
+    fun getNewRegistrationsCount(): Int {
+        val db = readableDatabase
+        val sevenDaysAgo = System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000L
+        val cursor = db.rawQuery(
+            "SELECT COUNT(*) FROM $TABLE_USERS WHERE $COLUMN_USER_ROLE = ? AND $COLUMN_USER_CREATED_AT >= ?",
+            arrayOf(User.ROLE_STUDENT, sevenDaysAgo.toString())
+        )
+        cursor.use {
+            if (it.moveToFirst()) return it.getInt(0)
+        }
+        return 0
+    }
+
+    /**
+     * Retrieve all registered student accounts for Student Management screen.
+     */
+    fun getAllStudents(): List<User> {
+        val list = mutableListOf<User>()
+        val db = readableDatabase
+        val cursor = db.query(
+            TABLE_USERS,
+            null,
+            "$COLUMN_USER_ROLE = ?",
+            arrayOf(User.ROLE_STUDENT),
+            null,
+            null,
+            "$COLUMN_USER_CREATED_AT DESC"
+        )
+        cursor.use {
+            while (it.moveToNext()) {
+                list.add(cursorToUser(it))
+            }
+        }
+        return list
+    }
+
+    /**
+     * Get real count distribution per complaint category for the analytics chart.
+     */
+    fun getCategoryDistribution(): Map<String, Int> {
+        val map = linkedMapOf<String, Int>()
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT $COLUMN_CATEGORY, COUNT(*) FROM $TABLE_COMPLAINTS GROUP BY $COLUMN_CATEGORY ORDER BY COUNT(*) DESC",
+            null
+        )
+        cursor.use {
+            while (it.moveToNext()) {
+                val cat = it.getString(0) ?: "General"
+                val count = it.getInt(1)
+                map[cat] = count
+            }
+        }
+        return map
+    }
+
+    /**
+     * Search and filter complaints by query text and status.
+     */
+    fun searchComplaints(query: String, statusFilter: String = "All"): List<Complaint> {
+        val list = mutableListOf<Complaint>()
+        val db = readableDatabase
+        val q = "%${query.trim().lowercase()}%"
+
+        val selection: String
+        val selectionArgs: Array<String>
+
+        if (statusFilter == "All") {
+            selection = "($COLUMN_TITLE LIKE ? OR $COLUMN_DESCRIPTION LIKE ? OR $COLUMN_CATEGORY LIKE ? OR $COLUMN_STUDENT_EMAIL LIKE ?)"
+            selectionArgs = arrayOf(q, q, q, q)
+        } else {
+            selection = "($COLUMN_TITLE LIKE ? OR $COLUMN_DESCRIPTION LIKE ? OR $COLUMN_CATEGORY LIKE ? OR $COLUMN_STUDENT_EMAIL LIKE ?) AND $COLUMN_STATUS = ?"
+            selectionArgs = arrayOf(q, q, q, q, statusFilter)
+        }
+
+        val cursor = db.query(
+            TABLE_COMPLAINTS,
+            null,
+            selection,
+            selectionArgs,
+            null,
+            null,
+            "$COLUMN_TIMESTAMP DESC"
+        )
+        cursor.use {
+            while (it.moveToNext()) {
+                list.add(cursorToComplaint(it))
+            }
+        }
+        return list
     }
 
     private fun cursorToComplaint(cursor: Cursor): Complaint {

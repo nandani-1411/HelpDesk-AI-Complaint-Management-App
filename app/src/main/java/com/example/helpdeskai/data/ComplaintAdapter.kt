@@ -36,6 +36,19 @@ class ComplaintAdapter(
         val tvTimestamp: TextView = itemView.findViewById(R.id.tv_card_timestamp)
         val layoutOfficerReply: LinearLayout = itemView.findViewById(R.id.layout_card_officer_reply)
         val tvOfficerReply: TextView = itemView.findViewById(R.id.tv_card_officer_reply)
+
+        // Visual Tracking Timeline Nodes & Connectors
+        val dotSubmitted: ImageView = itemView.findViewById(R.id.dot_step_submitted)
+        val line1: View = itemView.findViewById(R.id.line_step_1)
+        val dotReview: ImageView = itemView.findViewById(R.id.dot_step_review)
+        val line2: View = itemView.findViewById(R.id.line_step_2)
+        val dotProgress: ImageView = itemView.findViewById(R.id.dot_step_progress)
+        val line3: View = itemView.findViewById(R.id.line_step_3)
+        val dotResolved: ImageView = itemView.findViewById(R.id.dot_step_resolved)
+        val tvLabelSubmitted: TextView = itemView.findViewById(R.id.tv_label_submitted)
+        val tvLabelReview: TextView = itemView.findViewById(R.id.tv_label_review)
+        val tvLabelProgress: TextView = itemView.findViewById(R.id.tv_label_progress)
+        val tvLabelResolved: TextView = itemView.findViewById(R.id.tv_label_resolved)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ComplaintViewHolder {
@@ -70,6 +83,58 @@ class ComplaintAdapter(
                 holder.tvStatus.text = "Pending"
                 holder.tvStatus.setBackgroundResource(R.drawable.bg_badge_pending)
                 holder.tvStatus.setTextColor(ContextCompat.getColor(context, R.color.status_pending))
+            }
+        }
+
+        // Visual Tracking Timeline Dynamic Highlighting
+        val colorPrimary = ContextCompat.getColor(context, R.color.primary)
+        val colorPending = ContextCompat.getColor(context, R.color.status_pending)
+        val colorProgress = ContextCompat.getColor(context, R.color.status_in_progress)
+        val colorResolved = ContextCompat.getColor(context, R.color.status_resolved)
+        val colorMuted = ContextCompat.getColor(context, R.color.text_muted)
+
+        when (complaint.status.lowercase(Locale.ROOT)) {
+            "resolved" -> {
+                holder.dotSubmitted.setImageResource(R.drawable.dot_timeline_resolved)
+                holder.line1.setBackgroundResource(R.drawable.line_timeline_active)
+                holder.dotReview.setImageResource(R.drawable.dot_timeline_resolved)
+                holder.line2.setBackgroundResource(R.drawable.line_timeline_active)
+                holder.dotProgress.setImageResource(R.drawable.dot_timeline_resolved)
+                holder.line3.setBackgroundResource(R.drawable.line_timeline_active)
+                holder.dotResolved.setImageResource(R.drawable.dot_timeline_resolved)
+
+                holder.tvLabelSubmitted.setTextColor(colorResolved)
+                holder.tvLabelReview.setTextColor(colorResolved)
+                holder.tvLabelProgress.setTextColor(colorResolved)
+                holder.tvLabelResolved.setTextColor(colorResolved)
+            }
+            "in progress" -> {
+                holder.dotSubmitted.setImageResource(R.drawable.dot_timeline_active)
+                holder.line1.setBackgroundResource(R.drawable.line_timeline_active)
+                holder.dotReview.setImageResource(R.drawable.dot_timeline_active)
+                holder.line2.setBackgroundResource(R.drawable.line_timeline_active)
+                holder.dotProgress.setImageResource(R.drawable.dot_timeline_active)
+                holder.line3.setBackgroundResource(R.drawable.line_timeline_inactive)
+                holder.dotResolved.setImageResource(R.drawable.dot_timeline_inactive)
+
+                holder.tvLabelSubmitted.setTextColor(colorPrimary)
+                holder.tvLabelReview.setTextColor(colorPrimary)
+                holder.tvLabelProgress.setTextColor(colorProgress)
+                holder.tvLabelResolved.setTextColor(colorMuted)
+            }
+            else -> {
+                holder.dotSubmitted.setImageResource(R.drawable.dot_timeline_active)
+                holder.line1.setBackgroundResource(R.drawable.line_timeline_active)
+                holder.dotReview.setImageResource(R.drawable.dot_timeline_active)
+                holder.line2.setBackgroundResource(R.drawable.line_timeline_inactive)
+                holder.dotProgress.setImageResource(R.drawable.dot_timeline_inactive)
+                holder.line3.setBackgroundResource(R.drawable.line_timeline_inactive)
+                holder.dotResolved.setImageResource(R.drawable.dot_timeline_inactive)
+
+                holder.tvLabelSubmitted.setTextColor(colorPrimary)
+                holder.tvLabelReview.setTextColor(colorPending)
+                holder.tvLabelProgress.setTextColor(colorMuted)
+                holder.tvLabelResolved.setTextColor(colorMuted)
             }
         }
 
