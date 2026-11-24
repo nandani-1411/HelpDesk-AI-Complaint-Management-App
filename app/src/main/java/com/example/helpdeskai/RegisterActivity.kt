@@ -83,6 +83,10 @@ class RegisterActivity : AppCompatActivity() {
             performRegistration()
         }
 
+        findViewById<ImageView>(R.id.iv_reg_back)?.setOnClickListener {
+            finish()
+        }
+
         tvGoToLogin.setOnClickListener {
             finish()
         }

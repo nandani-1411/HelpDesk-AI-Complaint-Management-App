@@ -63,7 +63,7 @@ class ComplaintDatabaseHelper(context: Context) :
 
         // Seed Master Admin Account
         val adminValues = ContentValues().apply {
-            put(COLUMN_USER_NAME, "College Grievance Officer")
+            put(COLUMN_USER_NAME, "Support Team")
             put(COLUMN_USER_EMAIL, "admin@gmail.com")
             put(COLUMN_USER_PASSWORD, "admin123")
             put(COLUMN_USER_STUDENT_ID, "STAFF-001")
@@ -114,6 +114,11 @@ class ComplaintDatabaseHelper(context: Context) :
             val now = System.currentTimeMillis()
             db.execSQL("UPDATE $TABLE_USERS SET $COLUMN_USER_CREATED_AT = $now WHERE $COLUMN_USER_CREATED_AT = 0 OR $COLUMN_USER_CREATED_AT IS NULL")
             db.execSQL("UPDATE $TABLE_USERS SET $COLUMN_USER_LAST_LOGIN = $now WHERE $COLUMN_USER_LAST_LOGIN = 0 OR $COLUMN_USER_LAST_LOGIN IS NULL")
+            // Ensure admin name is 'Support Team'
+            val cv = ContentValues().apply {
+                put(COLUMN_USER_NAME, "Support Team")
+            }
+            db.update(TABLE_USERS, cv, "$COLUMN_USER_EMAIL = ?", arrayOf("admin@gmail.com"))
         } catch (_: Exception) {}
     }
 
@@ -325,6 +330,59 @@ class ComplaintDatabaseHelper(context: Context) :
     }
 
     /**
+     * Restore a deleted complaint (Undo operation).
+     */
+    fun restoreComplaint(complaint: Complaint): Long {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            if (complaint.id > 0) {
+                put(COLUMN_ID, complaint.id)
+            }
+            put(COLUMN_TITLE, complaint.title)
+            put(COLUMN_DESCRIPTION, complaint.description)
+            put(COLUMN_CATEGORY, complaint.category)
+            put(COLUMN_PHOTO_PATH, complaint.photoPath)
+            put(COLUMN_LOCATION_ADDRESS, complaint.locationAddress)
+            put(COLUMN_LATITUDE, complaint.latitude)
+            put(COLUMN_LONGITUDE, complaint.longitude)
+            put(COLUMN_STATUS, complaint.status)
+            put(COLUMN_OFFICER_REPLY, complaint.officerReply)
+            put(COLUMN_STUDENT_EMAIL, complaint.studentEmail)
+            put(COLUMN_TIMESTAMP, complaint.timestamp)
+        }
+        return db.insertWithOnConflict(TABLE_COMPLAINTS, null, values, SQLiteDatabase.CONFLICT_REPLACE)
+    }
+
+    /**
+     * Fetch student user by email.
+     */
+    fun getStudentByEmail(email: String): User? {
+        val db = readableDatabase
+        val cursor = db.query(
+            TABLE_USERS,
+            null,
+            "$COLUMN_USER_EMAIL = ?",
+            arrayOf(email.trim().lowercase()),
+            null, null, null
+        )
+        cursor.use {
+            if (it.moveToFirst()) {
+                return User(
+                    id = it.getLong(it.getColumnIndexOrThrow(COLUMN_USER_ID)),
+                    name = it.getString(it.getColumnIndexOrThrow(COLUMN_USER_NAME)),
+                    email = it.getString(it.getColumnIndexOrThrow(COLUMN_USER_EMAIL)),
+                    password = "",
+                    studentId = it.getString(it.getColumnIndexOrThrow(COLUMN_USER_STUDENT_ID)),
+                    role = it.getString(it.getColumnIndexOrThrow(COLUMN_USER_ROLE)),
+                    createdAt = it.getLong(it.getColumnIndexOrThrow(COLUMN_USER_CREATED_AT)),
+                    lastLogin = it.getLong(it.getColumnIndexOrThrow(COLUMN_USER_LAST_LOGIN))
+                )
+            }
+        }
+        return null
+    }
+
+    /**
      * Update user profile information.
      */
     fun updateUserProfile(email: String, newName: String, newStudentId: String?): Boolean {
@@ -468,6 +526,41 @@ class ComplaintDatabaseHelper(context: Context) :
             }
         }
         return list
+    }
+
+    /**
+     * Get complaint count for a specific student by email.
+     */
+    fun getComplaintCountByStudent(email: String): Int {
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT COUNT(*) FROM $TABLE_COMPLAINTS WHERE $COLUMN_STUDENT_EMAIL = ?",
+            arrayOf(email.trim().lowercase())
+        )
+        cursor.use {
+            if (it.moveToFirst()) return it.getInt(0)
+        }
+        return 0
+    }
+
+    /**
+     * Get monthly complaint counts for analytics (last 6 months).
+     */
+    fun getComplaintsByMonth(): Map<String, Int> {
+        val map = linkedMapOf<String, Int>()
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT strftime('%Y-%m', datetime($COLUMN_TIMESTAMP/1000, 'unixepoch', 'localtime')) as month, COUNT(*) FROM $TABLE_COMPLAINTS GROUP BY month ORDER BY month DESC LIMIT 6",
+            null
+        )
+        cursor.use {
+            while (it.moveToNext()) {
+                val month = it.getString(0) ?: "Unknown"
+                val count = it.getInt(1)
+                map[month] = count
+            }
+        }
+        return map
     }
 
     private fun cursorToComplaint(cursor: Cursor): Complaint {

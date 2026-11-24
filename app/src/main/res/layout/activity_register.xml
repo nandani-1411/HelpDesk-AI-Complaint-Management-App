@@ -13,9 +13,27 @@
         android:orientation="vertical"
         android:padding="24dp">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_reg_back"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="12dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/ic_back"
+                app:tint="@color/white"
+                android:contentDescription="Back" />
+        </LinearLayout>
+
         <Space
             android:layout_width="match_parent"
-            android:layout_height="24dp" />
+            android:layout_height="12dp" />
 
         <!-- Logo -->
         <ImageView
@@ -38,9 +56,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:text="Sign up to report and track campus grievances"
+            android:text="Sign up to report and track complaints"
             android:textColor="@color/text_secondary"
-            android:textSize="13sp"
+            android:textSize="14sp"
             android:gravity="center" />
 
         <Space
@@ -83,7 +101,7 @@
                     android:importantForAutofill="no"
                     android:paddingHorizontal="14dp"
                     android:textColor="@color/text_primary"
-                    android:textColorHint="@color/text_muted"
+                    android:textColorHint="@color/text_secondary"
                     android:textSize="14sp" />
 
                 <!-- Student Roll No / ID -->
@@ -106,7 +124,7 @@
                     android:inputType="textCapCharacters"
                     android:paddingHorizontal="14dp"
                     android:textColor="@color/text_primary"
-                    android:textColorHint="@color/text_muted"
+                    android:textColorHint="@color/text_secondary"
                     android:textSize="14sp" />
 
                 <!-- Email -->
@@ -130,7 +148,7 @@
                     android:importantForAutofill="no"
                     android:paddingHorizontal="14dp"
                     android:textColor="@color/text_primary"
-                    android:textColorHint="@color/text_muted"
+                    android:textColorHint="@color/text_secondary"
                     android:textSize="14sp" />
 
                 <!-- Password -->
@@ -158,7 +176,7 @@
                         android:paddingStart="14dp"
                         android:paddingEnd="48dp"
                         android:textColor="@color/text_primary"
-                        android:textColorHint="@color/text_muted"
+                        android:textColorHint="@color/text_secondary"
                         android:textSize="14sp" />
 
                     <ImageView
@@ -171,7 +189,7 @@
                         android:padding="12dp"
                         android:src="@drawable/ic_eye_off"
                         android:contentDescription="Toggle password visibility"
-                        app:tint="@color/text_muted" />
+                        app:tint="@color/text_secondary" />
                 </FrameLayout>
 
                 <!-- Confirm Password -->
@@ -199,7 +217,7 @@
                         android:paddingStart="14dp"
                         android:paddingEnd="48dp"
                         android:textColor="@color/text_primary"
-                        android:textColorHint="@color/text_muted"
+                        android:textColorHint="@color/text_secondary"
                         android:textSize="14sp" />
 
                     <ImageView

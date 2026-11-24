@@ -17,9 +17,9 @@ import com.example.helpdeskai.R
  */
 object NotificationHelper {
 
-    const val CHANNEL_ID = "helpdesk_grievance_alerts"
-    private const val CHANNEL_NAME = "HelpDesk Grievance Updates"
-    private const val CHANNEL_DESC = "Notifications for complaint status updates and officer replies"
+    const val CHANNEL_ID = "helpdesk_complaint_alerts"
+    private const val CHANNEL_NAME = "HelpDesk Complaint Updates"
+    private const val CHANNEL_DESC = "Notifications for complaint status updates and support replies"
 
     /**
      * Initializes the High-Priority notification channel required on Android 8.0+.
@@ -55,11 +55,11 @@ object NotificationHelper {
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle("📋 Grievance #$complaintId Submitted")
-            .setContentText("\"$title\" has been recorded and routed to the campus cell.")
+            .setContentTitle("📋 Complaint Submitted")
+            .setContentText("\"$title\" has been recorded and routed to the Support Team.")
             .setStyle(
                 NotificationCompat.BigTextStyle()
-                    .bigText("\"$title\" has been recorded successfully. Campus grievance officers have been notified.")
+                    .bigText("\"$title\" has been recorded successfully. The Support Team has been notified.")
             )
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
@@ -75,7 +75,7 @@ object NotificationHelper {
     }
 
     /**
-     * Triggered when Admin/Officer changes status or enters an official reply.
+     * Triggered when Support Team changes status or enters a reply.
      * Appears immediately as a heads-up system banner on the phone!
      */
     fun sendStatusUpdateNotification(
@@ -104,17 +104,17 @@ object NotificationHelper {
         }
 
         val bigTextContent = buildString {
-            append("Status changed to: ").append(newStatus.uppercase()).append("\n")
-            append("Ticket: \"").append(title).append("\"\n")
+            append("Status: ").append(newStatus).append("\n")
+            append("Complaint: \"").append(title).append("\"\n")
             if (!officerReply.isNullOrBlank()) {
-                append("Officer Note: ").append(officerReply)
+                append("Support Team: ").append(officerReply)
             }
         }
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle("$statusEmoji Ticket #$complaintId is now $newStatus!")
-            .setContentText(if (!officerReply.isNullOrBlank()) "Officer: $officerReply" else "Status updated for: $title")
+            .setContentTitle("$statusEmoji Your complaint is now $newStatus.")
+            .setContentText(if (!officerReply.isNullOrBlank()) "Support Team: $officerReply" else "Status updated for: $title")
             .setStyle(NotificationCompat.BigTextStyle().bigText(bigTextContent))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setDefaults(NotificationCompat.DEFAULT_ALL)

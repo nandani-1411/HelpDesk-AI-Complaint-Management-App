@@ -106,6 +106,17 @@ object LocationHelper {
     }
 
     /**
+     * Backward-compatible alias for getCurrentLocation
+     */
+    fun getCurrentLocation(
+        context: Context,
+        onLocationReceived: (latitude: Double, longitude: Double, address: String) -> Unit,
+        onError: (message: String) -> Unit
+    ) {
+        fetchCurrentLocation(context, onLocationReceived, onError)
+    }
+
+    /**
      * Converts GPS latitude and longitude into a readable location string using Geocoder.
      */
     fun getAddressFromCoordinates(context: Context, latitude: Double, longitude: Double): String {

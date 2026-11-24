@@ -45,7 +45,7 @@ class InboxActivity : AppCompatActivity() {
 
     private fun loadInboxMessages() {
         val userEmail = sessionManager.getUser()?.email
-        val complaints = if (!userEmail.isNullOrEmpty()) {
+        val complaints = if (!userEmail.isNullOrEmpty() && !sessionManager.getUserRole().equals("ADMIN", ignoreCase = true)) {
             dbHelper.getComplaintsByStudent(userEmail)
         } else {
             dbHelper.getAllComplaints()
@@ -54,14 +54,14 @@ class InboxActivity : AppCompatActivity() {
         val messages = mutableListOf<InboxMessage>()
 
         for (c in complaints) {
-            // If officer replied
+            // If support officer replied
             if (!c.officerReply.isNullOrBlank()) {
                 messages.add(
                     InboxMessage(
                         id = c.id * 10 + 2,
-                        title = "Officer Replied to Ticket #${c.id}",
-                        body = "Officer Note: ${c.officerReply}",
-                        tag = "OFFICIAL REPLY",
+                        title = "Support replied to your complaint",
+                        body = "${c.officerReply}",
+                        tag = "REPLY",
                         timestamp = c.timestamp + 60000,
                         isUnread = true
                     )
@@ -73,9 +73,9 @@ class InboxActivity : AppCompatActivity() {
                 messages.add(
                     InboxMessage(
                         id = c.id * 10 + 1,
-                        title = "Ticket #${c.id} marked as ${c.status.uppercase()}",
-                        body = "\"${c.title}\" has been updated to ${c.status}.",
-                        tag = "STATUS UPDATE",
+                        title = "Complaint updated to ${c.status}",
+                        body = "\"${c.title}\" is now ${c.status}.",
+                        tag = "UPDATE",
                         timestamp = c.timestamp + 30000,
                         isUnread = c.status.equals("Resolved", ignoreCase = true)
                     )
@@ -86,9 +86,9 @@ class InboxActivity : AppCompatActivity() {
             messages.add(
                 InboxMessage(
                     id = c.id * 10,
-                    title = "Grievance #${c.id} Submitted",
-                    body = "\"${c.title}\" received and assigned to ${c.category} department.",
-                    tag = "SUBMITTED",
+                    title = "Complaint Sent",
+                    body = "\"${c.title}\" has been received under ${c.category}.",
+                    tag = "SENT",
                     timestamp = c.timestamp,
                     isUnread = false
                 )
@@ -96,9 +96,6 @@ class InboxActivity : AppCompatActivity() {
         }
 
         messages.sortByDescending { it.timestamp }
-
-        val toolbar = findViewById<Toolbar>(R.id.toolbar_inbox)
-        toolbar.subtitle = "${messages.size} Messages"
 
         if (messages.isEmpty()) {
             rvInbox.visibility = View.GONE

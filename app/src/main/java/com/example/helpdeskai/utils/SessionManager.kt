@@ -58,6 +58,10 @@ class SessionManager(context: Context) {
         )
     }
 
+    fun getUserEmail(): String = prefs.getString(KEY_USER_EMAIL, "") ?: ""
+
+    fun getUserName(): String = prefs.getString(KEY_USER_NAME, "") ?: ""
+
     fun getUserRole(): String = prefs.getString(KEY_USER_ROLE, User.ROLE_STUDENT) ?: User.ROLE_STUDENT
 
     fun isAdmin(): Boolean = getUserRole().equals(User.ROLE_ADMIN, ignoreCase = true)

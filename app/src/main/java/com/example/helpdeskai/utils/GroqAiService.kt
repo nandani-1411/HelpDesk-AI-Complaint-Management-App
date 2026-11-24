@@ -67,13 +67,13 @@ object GroqAiService {
         executor.execute {
             try {
                 val systemPrompt = """
-You are HelpDesk AI, the intelligent grievance assistant for a college campus.
+You are HelpDesk AI, the intelligent complaint assistant for a college campus.
 
 A student has submitted a complaint. Your job is to:
 1. Understand the complaint semantically and decide the correct department category.
-2. Rewrite the description into a structured, professional format (do NOT just repeat what the student wrote word-for-word).
+2. Rewrite the description into a structured, professional format in the FIRST PERSON from the student's perspective (e.g., "I am writing to report...", "I noticed that..."). NEVER write "The student reports" or in the third person.
 3. Assess urgency based on the context (health/safety = High, daily inconvenience = Medium, minor = Low).
-4. Suggest what action the administration should take.
+4. Suggest what action the support team should take.
 
 You MUST respond ONLY with a valid JSON object — no extra text, no markdown, no explanation.
 
@@ -81,8 +81,8 @@ The JSON must have exactly these keys:
 {
   "category": "<choose ONE: Hostel & Mess | Scholarship & Fees | Academics & Exams | Campus Infrastructure | Placement & Training | Administration | Other>",
   "urgency": "<choose ONE: High | Medium | Low>",
-  "polished_description": "<2-3 professional sentences describing the grievance. Include: nature of issue, duration/severity, and impact on the student.>",
-  "resolution_suggestion": "<One specific action the administration should take to resolve this complaint.>",
+  "polished_description": "<2-3 clear, professional sentences written strictly in the FIRST PERSON from the student's own voice (\"I am facing...\", \"I noticed...\").>",
+  "resolution_suggestion": "<One specific action the support team should take to resolve this complaint.>",
   "confidence": <integer between 85 and 99>
 }
                 """.trimIndent()
@@ -109,6 +109,24 @@ The JSON must have exactly these keys:
                 }
             }
         }
+    }
+
+    /**
+     * Backward-compatible alias for enhanceDescription
+     */
+    fun enhanceDescription(
+        rawDescription: String,
+        onSuccess: (String) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        processStudentComplaint(
+            title = "Complaint",
+            rawDescription = rawDescription,
+            onSuccess = { result ->
+                onSuccess(result.polishedDescription)
+            },
+            onError = onError
+        )
     }
 
     // ─────────────────────────────────────────────────────────────────
@@ -138,7 +156,7 @@ The JSON must have exactly these keys:
         executor.execute {
             try {
                 val systemPrompt = """
-You are the official Grievance Officer of a college campus.
+You are the Support Team of a college campus.
 
 A student has submitted a complaint and you must write a formal administrative reply.
 
@@ -167,7 +185,7 @@ Student's Description: $complaintDescription
 
                 val reply = parsed.optString(
                     "official_reply",
-                    "Your grievance regarding \"$complaintTitle\" has been received and registered. The $complaintCategory department has been notified and will address the issue within 3–5 working days."
+                    "Your complaint regarding \"$complaintTitle\" has been received and registered. The $complaintCategory department has been notified and will address the issue within 2–3 working days."
                 )
 
                 mainHandler.post { onSuccess(reply) }
