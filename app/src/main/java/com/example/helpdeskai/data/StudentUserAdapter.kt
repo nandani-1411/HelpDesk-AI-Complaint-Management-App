@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.helpdeskai.R
 import com.example.helpdeskai.data.model.User
@@ -32,10 +33,13 @@ class StudentUserAdapter(
 
     override fun onBindViewHolder(holder: StudentViewHolder, position: Int) {
         val user = users[position]
-        holder.tvName.text = user.name
+        val capName = user.name.split(" ").joinToString(" ") { word ->
+            word.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+        }
+        holder.tvName.text = capName
         holder.tvEmail.text = user.email
 
-        val initials = user.name.split(" ").mapNotNull { it.firstOrNull()?.uppercase() }.take(2).joinToString("")
+        val initials = capName.split(" ").mapNotNull { it.firstOrNull()?.uppercase() }.take(2).joinToString("")
         holder.tvAvatar.text = if (initials.isNotEmpty()) initials else "S"
 
         val regDate = dateFormat.format(Date(user.createdAt))
@@ -45,6 +49,7 @@ class StudentUserAdapter(
 
         // Active if last login was within last 7 days
         val isRecent = user.lastLogin >= System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000L
+        holder.tvStatus.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.white))
         if (isRecent) {
             holder.tvStatus.text = "ACTIVE"
             holder.tvStatus.setBackgroundResource(R.drawable.bg_badge_resolved)

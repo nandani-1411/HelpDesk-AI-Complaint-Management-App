@@ -16,7 +16,7 @@ import java.util.Date
 import java.util.Locale
 
 /**
- * RecyclerView Adapter to render grievance tickets with status badges and details.
+ * RecyclerView Adapter to render complaints with status badges, waiting indicator, and details.
  */
 class ComplaintAdapter(
     private var complaintList: List<Complaint>,
@@ -49,6 +49,8 @@ class ComplaintAdapter(
         val tvLabelReview: TextView = itemView.findViewById(R.id.tv_label_review)
         val tvLabelProgress: TextView = itemView.findViewById(R.id.tv_label_progress)
         val tvLabelResolved: TextView = itemView.findViewById(R.id.tv_label_resolved)
+
+        val tvWaitingBadge: TextView? = itemView.findViewById(R.id.tv_waiting_badge)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ComplaintViewHolder {
@@ -64,37 +66,45 @@ class ComplaintAdapter(
         holder.tvTitle.text = complaint.title
         holder.tvDescription.text = complaint.description
         holder.tvCategory.text = complaint.category
-        holder.tvCategory.setTextColor(ContextCompat.getColor(context, R.color.badge_cat_text))
+        holder.tvCategory.setTextColor(ContextCompat.getColor(context, R.color.white))
         holder.tvTimestamp.text = dateFormat.format(Date(complaint.timestamp))
 
-        // Status Badge Styling with dynamic theme colors
-        when (complaint.status.lowercase(Locale.ROOT)) {
+        // Waiting indicator: show ONLY when admin has not replied yet
+        val daysWaiting = ((System.currentTimeMillis() - complaint.timestamp) / (1000 * 60 * 60 * 24)).coerceAtLeast(0)
+        holder.tvWaitingBadge?.let { badge ->
+            if (complaint.status.equals("Resolved", ignoreCase = true) || !complaint.officerReply.isNullOrBlank()) {
+                badge.visibility = View.GONE
+            } else {
+                badge.visibility = View.VISIBLE
+                badge.setTextColor(ContextCompat.getColor(context, R.color.white))
+                badge.text = if (daysWaiting == 0L) "Waiting for reply: Today" else "Waiting for reply: ${daysWaiting}d"
+            }
+        }
+
+        // Status Badge with high-contrast white text
+        holder.tvStatus.setTextColor(ContextCompat.getColor(context, R.color.white))
+        when (complaint.status.lowercase()) {
             "resolved" -> {
                 holder.tvStatus.text = "Resolved"
                 holder.tvStatus.setBackgroundResource(R.drawable.bg_badge_resolved)
-                holder.tvStatus.setTextColor(ContextCompat.getColor(context, R.color.status_resolved))
             }
             "in progress" -> {
                 holder.tvStatus.text = "In Progress"
                 holder.tvStatus.setBackgroundResource(R.drawable.bg_badge_progress)
-                holder.tvStatus.setTextColor(ContextCompat.getColor(context, R.color.status_in_progress))
             }
             else -> {
                 holder.tvStatus.text = "Pending"
                 holder.tvStatus.setBackgroundResource(R.drawable.bg_badge_pending)
-                holder.tvStatus.setTextColor(ContextCompat.getColor(context, R.color.status_pending))
             }
         }
 
-        // Visual Tracking Timeline Dynamic Highlighting
-        val colorPrimary = ContextCompat.getColor(context, R.color.primary)
-        val colorPending = ContextCompat.getColor(context, R.color.status_pending)
-        val colorProgress = ContextCompat.getColor(context, R.color.status_in_progress)
+        // Tracking timeline: ONLY steps already reached should be green
         val colorResolved = ContextCompat.getColor(context, R.color.status_resolved)
         val colorMuted = ContextCompat.getColor(context, R.color.text_muted)
 
-        when (complaint.status.lowercase(Locale.ROOT)) {
+        when (complaint.status.lowercase()) {
             "resolved" -> {
+                // All 4 steps reached -> all green
                 holder.dotSubmitted.setImageResource(R.drawable.dot_timeline_resolved)
                 holder.line1.setBackgroundResource(R.drawable.line_timeline_active)
                 holder.dotReview.setImageResource(R.drawable.dot_timeline_resolved)
@@ -109,30 +119,32 @@ class ComplaintAdapter(
                 holder.tvLabelResolved.setTextColor(colorResolved)
             }
             "in progress" -> {
-                holder.dotSubmitted.setImageResource(R.drawable.dot_timeline_active)
+                // Steps 1 (Submitted), 2 (Review), 3 (In Progress) reached -> green. Step 4 (Resolved) is NOT reached
+                holder.dotSubmitted.setImageResource(R.drawable.dot_timeline_resolved)
                 holder.line1.setBackgroundResource(R.drawable.line_timeline_active)
-                holder.dotReview.setImageResource(R.drawable.dot_timeline_active)
+                holder.dotReview.setImageResource(R.drawable.dot_timeline_resolved)
                 holder.line2.setBackgroundResource(R.drawable.line_timeline_active)
-                holder.dotProgress.setImageResource(R.drawable.dot_timeline_active)
+                holder.dotProgress.setImageResource(R.drawable.dot_timeline_resolved)
                 holder.line3.setBackgroundResource(R.drawable.line_timeline_inactive)
                 holder.dotResolved.setImageResource(R.drawable.dot_timeline_inactive)
 
-                holder.tvLabelSubmitted.setTextColor(colorPrimary)
-                holder.tvLabelReview.setTextColor(colorPrimary)
-                holder.tvLabelProgress.setTextColor(colorProgress)
+                holder.tvLabelSubmitted.setTextColor(colorResolved)
+                holder.tvLabelReview.setTextColor(colorResolved)
+                holder.tvLabelProgress.setTextColor(colorResolved)
                 holder.tvLabelResolved.setTextColor(colorMuted)
             }
             else -> {
-                holder.dotSubmitted.setImageResource(R.drawable.dot_timeline_active)
-                holder.line1.setBackgroundResource(R.drawable.line_timeline_active)
-                holder.dotReview.setImageResource(R.drawable.dot_timeline_active)
+                // Pending: Only Step 1 (Submitted) is reached -> green. Rest are inactive
+                holder.dotSubmitted.setImageResource(R.drawable.dot_timeline_resolved)
+                holder.line1.setBackgroundResource(R.drawable.line_timeline_inactive)
+                holder.dotReview.setImageResource(R.drawable.dot_timeline_inactive)
                 holder.line2.setBackgroundResource(R.drawable.line_timeline_inactive)
                 holder.dotProgress.setImageResource(R.drawable.dot_timeline_inactive)
                 holder.line3.setBackgroundResource(R.drawable.line_timeline_inactive)
                 holder.dotResolved.setImageResource(R.drawable.dot_timeline_inactive)
 
-                holder.tvLabelSubmitted.setTextColor(colorPrimary)
-                holder.tvLabelReview.setTextColor(colorPending)
+                holder.tvLabelSubmitted.setTextColor(colorResolved)
+                holder.tvLabelReview.setTextColor(colorMuted)
                 holder.tvLabelProgress.setTextColor(colorMuted)
                 holder.tvLabelResolved.setTextColor(colorMuted)
             }

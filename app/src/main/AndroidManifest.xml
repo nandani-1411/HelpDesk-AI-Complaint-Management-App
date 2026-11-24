@@ -67,6 +67,43 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
+        <activity
+            android:name=".StudentsActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".StudentDetailActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".AdminComplaintsActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".AnalyticsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ComplaintDetailActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".MyComplaintsActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".GuidelinesActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

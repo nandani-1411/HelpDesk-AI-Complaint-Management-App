@@ -15,7 +15,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/primary"
+        android:background="@color/surface_card_alt"
         android:orientation="vertical"
         android:paddingHorizontal="20dp"
         android:paddingTop="36dp"
@@ -34,9 +34,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="College Grievance Officer"
-            android:textColor="@color/white"
-            android:textSize="17sp"
+            android:text="Support Team"
+            android:textColor="@color/text_primary"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
@@ -45,8 +45,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:text="admin@gmail.com"
-            android:textColor="@color/primary_light"
-            android:textSize="12sp" />
+            android:textColor="@color/text_secondary"
+            android:textSize="13sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -55,9 +55,9 @@
             android:background="@drawable/bg_badge_progress"
             android:paddingHorizontal="10dp"
             android:paddingVertical="3dp"
-            android:text="ADMINISTRATOR"
-            android:textColor="@color/primary"
-            android:textSize="10sp"
+            android:text="SUPPORT TEAM"
+            android:textColor="@color/status_in_progress"
+            android:textSize="11sp"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -74,15 +74,14 @@
             android:orientation="vertical"
             android:paddingHorizontal="12dp">
 
-            <!-- 1. Command Center (Active) -->
+            <!-- 1. Complaints (search + filters) -->
             <LinearLayout
-                android:id="@+id/nav_admin_item_cmd"
+                android:id="@+id/nav_admin_item_complaints"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:background="@drawable/bg_badge_progress"
+                android:background="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingHorizontal="16dp">
@@ -90,21 +89,20 @@
                 <ImageView
                     android:layout_width="22dp"
                     android:layout_height="22dp"
-                    android:src="@drawable/ic_admin"
-                    app:tint="@color/primary" />
+                    android:src="@drawable/ic_menu"
+                    app:tint="@color/text_primary" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_weight="1"
-                    android:text="Command Center"
-                    android:textColor="@color/primary"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:text="Complaints"
+                    android:textColor="@color/text_primary"
+                    android:textSize="15sp" />
             </LinearLayout>
 
-            <!-- 2. Student Directory & Audit -->
+            <!-- 2. Students -->
             <LinearLayout
                 android:id="@+id/nav_admin_item_students"
                 android:layout_width="match_parent"
@@ -128,12 +126,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_weight="1"
-                    android:text="Student Directory &amp; Audit"
+                    android:text="Students"
                     android:textColor="@color/text_primary"
-                    android:textSize="14sp" />
+                    android:textSize="15sp" />
             </LinearLayout>
 
-            <!-- 3. Category Analytics -->
+            <!-- 3. Reports (charts, complaints by type) -->
             <LinearLayout
                 android:id="@+id/nav_admin_item_analytics"
                 android:layout_width="match_parent"
@@ -149,7 +147,7 @@
                 <ImageView
                     android:layout_width="22dp"
                     android:layout_height="22dp"
-                    android:src="@drawable/ic_menu"
+                    android:src="@drawable/ic_sparkle"
                     app:tint="@color/text_primary" />
 
                 <TextView
@@ -157,12 +155,41 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_weight="1"
-                    android:text="Analytics &amp; Reports"
+                    android:text="Reports"
                     android:textColor="@color/text_primary"
-                    android:textSize="14sp" />
+                    android:textSize="15sp" />
             </LinearLayout>
 
-            <!-- 4. Officer Settings -->
+            <!-- 4. Inbox -->
+            <LinearLayout
+                android:id="@+id/nav_admin_item_notifications"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="4dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="16dp">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_notification"
+                    app:tint="@color/text_primary" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
+                    android:text="Inbox"
+                    android:textColor="@color/text_primary"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <!-- 5. My Profile -->
             <LinearLayout
                 android:id="@+id/nav_admin_item_settings"
                 android:layout_width="match_parent"
@@ -179,16 +206,16 @@
                     android:layout_width="22dp"
                     android:layout_height="22dp"
                     android:src="@drawable/ic_profile"
-                    app:tint="@color/text_secondary" />
+                    app:tint="@color/text_primary" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_weight="1"
-                    android:text="Officer Profile &amp; Settings"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="14sp" />
+                    android:text="My Profile"
+                    android:textColor="@color/text_primary"
+                    android:textSize="15sp" />
             </LinearLayout>
 
         </LinearLayout>
@@ -224,7 +251,7 @@
             android:layout_weight="1"
             android:text="Sign Out"
             android:textColor="@color/status_rejected"
-            android:textSize="14sp"
+            android:textSize="15sp"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -233,7 +260,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:paddingBottom="12dp"
-        android:text="HelpDesk AI v1.2 • Admin Command Center"
+        android:text="HelpDesk AI • Support Desk"
         android:textColor="@color/text_muted"
-        android:textSize="10sp" />
+        android:textSize="11sp" />
 </LinearLayout>

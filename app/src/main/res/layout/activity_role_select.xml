@@ -98,7 +98,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="Raise grievance with photo, GPS &amp; Groq AI, track status"
+                    android:text="Raise complaint with photo, GPS &amp; Groq AI, track status"
                     android:textColor="@color/text_secondary"
                     android:textSize="13sp" />
             </LinearLayout>
@@ -157,7 +157,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Officer / Admin Portal"
+                    android:text="Support Team Portal"
                     android:textColor="@color/status_resolved"
                     android:textSize="17sp"
                     android:textStyle="bold" />

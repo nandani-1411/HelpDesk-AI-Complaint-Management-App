@@ -4,31 +4,30 @@
     android:id="@+id/drawer_layout_admin"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bg_light"
     android:fitsSystemWindows="true">
 
     <!-- Main Admin Dashboard Content -->
     <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/admin_dashboard_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/bg_light">
 
-        <!-- Top AppBar -->
+        <!-- Top App Bar -->
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/primary"
+            android:background="@color/bg_light"
             app:elevation="0dp">
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar_admin"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@color/primary"
+                android:background="@color/bg_light"
                 app:navigationIcon="@drawable/ic_menu"
-                app:title="Admin Command Center"
-                app:titleTextColor="@color/white"
-                app:subtitleTextColor="@color/primary_light" />
+                app:title="Admin Dashboard"
+                app:titleTextColor="@color/text_primary" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -44,19 +43,19 @@
                 android:orientation="vertical"
                 android:paddingBottom="40dp">
 
-                <!-- Admin Profile Banner -->
+                <!-- Greeting & Profile Banner -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_admin_profile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="12dp"
-                    android:layout_marginBottom="8dp"
                     android:clickable="true"
                     android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
                     app:cardBackgroundColor="@color/surface_card"
                     app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
+                    app:cardElevation="0dp"
                     app:strokeColor="@color/divider"
                     app:strokeWidth="1dp">
 
@@ -65,11 +64,11 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:padding="14dp">
+                        android:padding="16dp">
 
                         <ImageView
-                            android:layout_width="44dp"
-                            android:layout_height="44dp"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
                             android:background="@drawable/bg_button_primary"
                             android:padding="10dp"
                             android:src="@drawable/ic_admin"
@@ -78,7 +77,7 @@
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
+                            android:layout_marginStart="14dp"
                             android:layout_weight="1"
                             android:orientation="vertical">
 
@@ -86,197 +85,46 @@
                                 android:id="@+id/tv_admin_welcome_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Administrator"
+                                android:text="Welcome, Support Team"
                                 android:textColor="@color/text_primary"
-                                android:textSize="15sp"
+                                android:textSize="17sp"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/tv_admin_email_sub"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="1dp"
-                                android:text="College Grievance Officer • Tap to Edit"
+                                android:layout_marginTop="2dp"
+                                android:text="admin@gmail.com • Support Desk"
                                 android:textColor="@color/text_secondary"
-                                android:textSize="12sp" />
+                                android:textSize="13sp" />
                         </LinearLayout>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_badge_progress"
-                            android:paddingHorizontal="8dp"
-                            android:paddingVertical="3dp"
-                            android:text="SETTINGS"
-                            android:textColor="@color/primary"
-                            android:textSize="10sp"
-                            android:textStyle="bold" />
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_arrow_right"
+                            app:tint="@color/text_muted" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- SECTION 1: Student & User Intelligence (Real DB Stats) -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/card_student_intelligence"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
-                    android:layout_marginBottom="8dp"
-                    app:cardBackgroundColor="@color/surface_card"
-                    app:cardCornerRadius="14dp"
-                    app:cardElevation="1dp"
-                    app:strokeColor="@color/divider"
-                    app:strokeWidth="1dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="12dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="👥 Student Community Audit"
-                                android:textColor="@color/text_primary"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btn_manage_students"
-                                style="@style/Widget.Material3.Button.TextButton"
-                                android:layout_width="wrap_content"
-                                android:layout_height="36dp"
-                                android:paddingHorizontal="8dp"
-                                android:text="View Directory ›"
-                                android:textColor="@color/primary"
-                                android:textSize="11sp" />
-                        </LinearLayout>
-
-                        <!-- Student Metrics 3-Col -->
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
-                            android:orientation="horizontal">
-
-                            <!-- Total Students -->
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:id="@+id/tv_admin_stat_students"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="0"
-                                    android:textColor="@color/primary"
-                                    android:textSize="18sp"
-                                    android:textStyle="bold" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="1dp"
-                                    android:text="Total Students"
-                                    android:textColor="@color/text_secondary"
-                                    android:textSize="10sp" />
-                            </LinearLayout>
-
-                            <View
-                                android:layout_width="1dp"
-                                android:layout_height="28dp"
-                                android:layout_gravity="center_vertical"
-                                android:background="@color/divider" />
-
-                            <!-- Active Users -->
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:id="@+id/tv_admin_stat_active"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="0"
-                                    android:textColor="@color/status_resolved"
-                                    android:textSize="18sp"
-                                    android:textStyle="bold" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="1dp"
-                                    android:text="Active Users"
-                                    android:textColor="@color/status_resolved"
-                                    android:textSize="10sp" />
-                            </LinearLayout>
-
-                            <View
-                                android:layout_width="1dp"
-                                android:layout_height="28dp"
-                                android:layout_gravity="center_vertical"
-                                android:background="@color/divider" />
-
-                            <!-- New Registrations -->
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:id="@+id/tv_admin_stat_new_reg"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="0"
-                                    android:textColor="@color/accent"
-                                    android:textSize="18sp"
-                                    android:textStyle="bold" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="1dp"
-                                    android:text="New (7 Days)"
-                                    android:textColor="@color/text_secondary"
-                                    android:textSize="10sp" />
-                            </LinearLayout>
-
-                        </LinearLayout>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <!-- SECTION 2: 4 Grievance Metrics Dashboard -->
+                <!-- 4 Real Counters Row -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
                     android:orientation="horizontal"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="2dp">
+                    android:paddingHorizontal="12dp">
 
-                    <!-- Total Card -->
+                    <!-- Total -->
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="4dp"
                         android:layout_weight="1"
                         app:cardBackgroundColor="@color/surface_card"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="1dp"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="0dp"
                         app:strokeColor="@color/divider"
                         app:strokeWidth="1dp">
 
@@ -285,36 +133,37 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:paddingVertical="10dp">
+                            android:paddingVertical="14dp">
 
                             <TextView
                                 android:id="@+id/tv_stat_total"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="0"
-                                android:textColor="@color/primary"
-                                android:textSize="20sp"
+                                android:textColor="@color/text_primary"
+                                android:textSize="22sp"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="2dp"
+                                android:layout_marginTop="4dp"
                                 android:text="Total"
                                 android:textColor="@color/text_secondary"
-                                android:textSize="11sp" />
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
-                    <!-- Pending Card -->
+                    <!-- Pending (Orange) -->
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="4dp"
                         android:layout_weight="1"
                         app:cardBackgroundColor="@color/surface_card"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="1dp"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="0dp"
                         app:strokeColor="@color/status_pending"
                         app:strokeWidth="1dp">
 
@@ -323,7 +172,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:paddingVertical="10dp">
+                            android:paddingVertical="14dp">
 
                             <TextView
                                 android:id="@+id/tv_stat_pending"
@@ -331,28 +180,29 @@
                                 android:layout_height="wrap_content"
                                 android:text="0"
                                 android:textColor="@color/status_pending"
-                                android:textSize="20sp"
+                                android:textSize="22sp"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="2dp"
+                                android:layout_marginTop="4dp"
                                 android:text="Pending"
                                 android:textColor="@color/status_pending"
-                                android:textSize="11sp" />
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
-                    <!-- In Progress Card -->
+                    <!-- In Progress (Blue) -->
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="4dp"
                         android:layout_weight="1"
                         app:cardBackgroundColor="@color/surface_card"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="1dp"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="0dp"
                         app:strokeColor="@color/status_in_progress"
                         app:strokeWidth="1dp">
 
@@ -361,7 +211,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:paddingVertical="10dp">
+                            android:paddingVertical="14dp">
 
                             <TextView
                                 android:id="@+id/tv_stat_progress"
@@ -369,28 +219,29 @@
                                 android:layout_height="wrap_content"
                                 android:text="0"
                                 android:textColor="@color/status_in_progress"
-                                android:textSize="20sp"
+                                android:textSize="22sp"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="2dp"
+                                android:layout_marginTop="4dp"
                                 android:text="Progress"
                                 android:textColor="@color/status_in_progress"
-                                android:textSize="11sp" />
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
-                    <!-- Resolved Card -->
+                    <!-- Resolved (Green) -->
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="4dp"
                         android:layout_weight="1"
                         app:cardBackgroundColor="@color/surface_card"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="1dp"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="0dp"
                         app:strokeColor="@color/status_resolved"
                         app:strokeWidth="1dp">
 
@@ -399,7 +250,7 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:paddingVertical="10dp">
+                            android:paddingVertical="14dp">
 
                             <TextView
                                 android:id="@+id/tv_stat_resolved"
@@ -407,188 +258,92 @@
                                 android:layout_height="wrap_content"
                                 android:text="0"
                                 android:textColor="@color/status_resolved"
-                                android:textSize="20sp"
+                                android:textSize="22sp"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="2dp"
+                                android:layout_marginTop="4dp"
                                 android:text="Resolved"
                                 android:textColor="@color/status_resolved"
-                                android:textSize="11sp" />
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
                 </LinearLayout>
 
-                <!-- SECTION 3: Complaint Categories Analytics Breakdown Card -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/card_category_analytics"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
-                    android:layout_marginTop="6dp"
-                    android:layout_marginBottom="8dp"
-                    app:cardBackgroundColor="@color/surface_card"
-                    app:cardCornerRadius="14dp"
-                    app:cardElevation="1dp"
-                    app:strokeColor="@color/divider"
-                    app:strokeWidth="1dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="14dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="📊 Category Distribution Analytics"
-                            android:textColor="@color/text_primary"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tv_analytics_summary"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="Live grievance breakdown by college department"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="11sp" />
-
-                        <!-- Dynamic Analytics Container -->
-                        <LinearLayout
-                            android:id="@+id/layout_analytics_bars"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="vertical" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <!-- SECTION 4: Live Search & Filter Bar -->
+                <!-- Section Header: Needs your attention -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
-                    android:layout_marginTop="4dp"
-                    android:background="@drawable/bg_input_field"
+                    android:layout_marginTop="20dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:paddingHorizontal="12dp">
+                    android:paddingHorizontal="16dp">
 
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/ic_location"
-                        app:tint="@color/text_muted" />
-
-                    <EditText
-                        android:id="@+id/et_admin_search"
+                    <TextView
                         android:layout_width="0dp"
-                        android:layout_height="44dp"
-                        android:layout_marginStart="8dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="@null"
-                        android:hint="Search tickets by title, student or category..."
-                        android:imeOptions="actionSearch"
-                        android:inputType="text"
+                        android:text="Needs your attention"
                         android:textColor="@color/text_primary"
-                        android:textColorHint="@color/text_muted"
-                        android:textSize="13sp" />
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
-                    <ImageView
-                        android:id="@+id/iv_admin_clear_search"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/ic_empty_box"
-                        android:visibility="gone"
-                        app:tint="@color/text_muted" />
-                </LinearLayout>
-
-                <!-- Filter Chips Row -->
-                <HorizontalScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clipToPadding="false"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="4dp"
-                    android:scrollbars="none">
-
-                    <com.google.android.material.chip.ChipGroup
-                        android:id="@+id/chip_group_filters"
+                    <TextView
+                        android:id="@+id/tv_view_all_complaints"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:singleSelection="true">
+                        android:background="?attr/selectableItemBackground"
+                        android:padding="8dp"
+                        android:text="View All &gt;"
+                        android:textColor="@color/accent"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chip_filter_all"
-                            style="@style/Widget.Material3.Chip.Filter"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checked="true"
-                            android:text="@string/filter_all" />
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chip_filter_pending"
-                            style="@style/Widget.Material3.Chip.Filter"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/filter_pending" />
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chip_filter_in_progress"
-                            style="@style/Widget.Material3.Chip.Filter"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/filter_in_progress" />
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chip_filter_resolved"
-                            style="@style/Widget.Material3.Chip.Filter"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/filter_resolved" />
-
-                    </com.google.android.material.chip.ChipGroup>
-                </HorizontalScrollView>
-
-                <!-- Complaints RecyclerView -->
+                <!-- Complaints List for attention -->
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_admin_complaints"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:clipToPadding="false"
-                    android:nestedScrollingEnabled="false"
-                    android:paddingBottom="24dp" />
+                    android:layout_marginTop="4dp"
+                    android:nestedScrollingEnabled="false" />
 
                 <!-- Empty State -->
                 <LinearLayout
                     android:id="@+id/layout_admin_empty_state"
                     android:layout_width="match_parent"
-                    android:layout_height="180dp"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="24dp"
+                    android:padding="32dp"
                     android:visibility="gone">
 
                     <ImageView
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
-                        android:src="@drawable/ic_empty_box"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/ic_inbox"
                         app:tint="@color/text_muted" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="No complaints match this filter"
+                        android:text="No complaints right now"
                         android:textColor="@color/text_primary"
-                        android:textSize="15sp"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="All complaints have been answered."
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -596,7 +351,7 @@
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <!-- Admin Navigation Drawer -->
+    <!-- Navigation Drawer View -->
     <include layout="@layout/layout_admin_drawer" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

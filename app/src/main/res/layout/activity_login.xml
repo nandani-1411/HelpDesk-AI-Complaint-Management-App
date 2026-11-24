@@ -38,9 +38,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Sign in to track and resolve campus grievances"
+            android:text="Sign in to track and resolve campus complaints"
             android:textColor="@color/text_secondary"
-            android:textSize="13sp"
+            android:textSize="14sp"
             android:gravity="center" />
 
         <Space
@@ -106,7 +106,7 @@
                     android:inputType="textEmailAddress"
                     android:paddingHorizontal="14dp"
                     android:textColor="@color/text_primary"
-                    android:textColorHint="@color/text_muted"
+                    android:textColorHint="@color/text_secondary"
                     android:textSize="14sp" />
 
                 <!-- Password Input -->
@@ -135,7 +135,7 @@
                         android:paddingStart="14dp"
                         android:paddingEnd="52dp"
                         android:textColor="@color/text_primary"
-                        android:textColorHint="@color/text_muted"
+                        android:textColorHint="@color/text_secondary"
                         android:textSize="14sp" />
 
                     <ImageView
