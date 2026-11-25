@@ -1,6 +1,14 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
 }
+
+val localProps = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) file.inputStream().use { load(it) }
+}
+val groqApiKey: String = localProps.getProperty("GROQ_API_KEY") ?: ""
 
 android {
     namespace = "com.example.helpdeskai"
@@ -15,7 +23,13 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        buildConfigField("String", "GROQ_API_KEY", "\"$groqApiKey\"")
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     buildTypes {

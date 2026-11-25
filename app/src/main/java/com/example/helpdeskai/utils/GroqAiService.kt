@@ -2,6 +2,7 @@ package com.example.helpdeskai.utils
 
 import android.os.Handler
 import android.os.Looper
+import com.example.helpdeskai.BuildConfig
 import org.json.JSONArray
 import org.json.JSONObject
 import java.net.HttpURLConnection
@@ -22,7 +23,7 @@ import java.util.concurrent.Executors
  */
 object GroqAiService {
 
-    private const val GROQ_API_KEY  = "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"
+    private val GROQ_API_KEY  = BuildConfig.GROQ_API_KEY
     private const val GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions"
     private const val GROQ_MODEL    = "openai/gpt-oss-20b"
 
